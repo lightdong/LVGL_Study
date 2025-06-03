@@ -11,7 +11,9 @@ codeblocks下载：https://www.codeblocks.org/
 网址：https://github.com/lvgl/lv_port_win_codeblocks
 在这个git里面可以选择自己想要的版本
 
-可以自己建立learn.h & learn.c文件用于学习
+可以自己建立learn.h & learn.c并在main函数中调用自己写的函数，用于学习各种小部件及设计自己的UI界面（如何想更进一步的话可以去学一下PS）
+
+PS是个好东西
 
 GUI是图形用户界面的意思，在生活中最常见的就是手机的触摸屏，用图形与触摸来实现人机的交互
 
