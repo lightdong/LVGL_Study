@@ -11,3 +11,21 @@ codeblocks下载：https://www.codeblocks.org/
 网址：https://github.com/lvgl/lv_port_win_codeblocks
 在这个git里面可以选择自己想要的版本
 
+可以自己建立learn.h & learn.c文件用于学习
+
+GUI是图形用户界面的意思，在生活中最常见的就是手机的触摸屏，用图形与触摸来实现人机的交互
+
+GUI库就是用户可以自己根据别人已经写好的架构，在这个架构的基础上去调用API，这些API都是一些用于图形用户开发的库（比如说：按钮、菜单、下拉框）
+
+现在来学习LVGL
+
+LVGL的优点很广，也是现在势头正猛的一个GUI库
+
+LVGL是完全免费且开源的，LVGL由C语言书写可以在任何的MCU | MPU上运行
+
+LVGL提供了多种小部件功能，可以实现很漂亮的界面
+
+v8.3
+
+
+
