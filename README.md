@@ -29,5 +29,13 @@ LVGL提供了多种小部件功能，可以实现很漂亮的界面
 
 v8.3
 
+打开编辑器后，字体可能会有点小
+
+可以在setting -> editor -> font中进行修改font一般有字体的意思
+![image](https://github.com/user-attachments/assets/24ec6161-4123-4871-997c-7de45ffb7489)
+
+在下面可以修改配色&高亮的方案
+![image](https://github.com/user-attachments/assets/5bb0da91-11f6-4795-b577-a6cecf1dbe05)
+
 
 
