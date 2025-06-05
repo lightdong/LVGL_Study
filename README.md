@@ -29,6 +29,15 @@ LVGL提供了多种小部件功能，可以实现很漂亮的界面
 
 v8.3
 
+lv_conf.h中默认色深选择RGB565
+
+/*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
+#define LV_COLOR_DEPTH     16
+
+main.c中选择模拟的屏幕分辨率为240*240
+/*Initialize the HAL for LittlevGL*/
+lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
+
 打开编辑器后，字体可能会有点小
 
 可以在setting -> editor -> font中进行修改font一般有字体的意思
