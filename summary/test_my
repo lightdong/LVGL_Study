@@ -1,1 +1,36 @@
+#include "test_sum.h"
+#include "lvgl.h"
+
+
+
+void my_test(){
+    /*创建一个按键*/
+    lv_obj_t *btn_0 = lv_btn_create(lv_scr_act());//从活动屏幕去创建一个按键
+    lv_obj_set_size(btn_0,100,50);//调整按键的大小
+    lv_obj_center(btn_0);//调整按键的位置，默认是父类的左上角，这里调整到中间
+    lv_obj_set_pos(btn_0,60,0);
+
+    /*创建一个开关*/
+    lv_obj_t *switch0 = lv_switch_create(lv_scr_act());
+
+    /*创建一个obj*/
+    lv_obj_t *obj0 = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(obj0,100,100);
+    lv_obj_set_pos(obj0,0,100);
+
+    /*以obj0为基类创建两个按键*/
+    lv_obj_t *btn1 = lv_btn_create(obj0);
+
+    lv_obj_t *btn2 = lv_btn_create(obj0);
+    lv_obj_set_size(btn2,30,15);
+    lv_obj_center(btn2);
+
+    /*移动父类，由父类创建的子类移动*/
+    lv_obj_set_pos(obj0,0,50);
+
+    /*创建的子类只能显示在父类范围内的东西*/
+    lv_obj_t *btn3 = lv_btn_create(obj0);
+    lv_obj_set_size(btn3,80,40);
+    lv_obj_set_pos(btn3,0,-50);//相对于父类obj0进行移动
+}
 
