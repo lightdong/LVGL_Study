@@ -1,1 +1,79 @@
 
+#include "learn.h"
+#include "lvgl.h"
+
+#define SIZE 0
+#define POS 0
+#define ALIGN_1 0
+#define ALIGN_2 1
+
+void test_property( ){
+#if SIZE/*property : size*/
+    lv_obj_t *obj0 = lv_obj_create(lv_scr_act());
+    /*size有关的API只有三个*/
+    //lv_obj_set_width(obj0,50);//改变宽度
+    //lv_obj_set_height(obj0,50);//改变高度
+    lv_obj_set_size(obj0,120,120);//改变尺寸,在这个API里面其实是调用的前两个函数
+
+    /*不管是父类还是子类，共用一套API*/
+    lv_obj_t *btn0 = lv_btn_create(obj0);
+   // lv_obj_set_width(btn0,60);
+   // lv_obj_set_height(btn0,60);
+    lv_obj_set_size(btn0,80,80);
+
+#endif // 1
+
+#if POS/*property : pos*/
+    /*以父类的左上角为基点，向左为x的正方向，向下为y的正方向*/
+    lv_obj_t *obj1 = lv_obj_create(lv_scr_act());
+    //lv_obj_set_x(obj1,50);
+    //lv_obj_set_y(obj1,50);
+    //lv_obj_set_y(obj1,-50);
+    lv_obj_set_pos(obj1,50,50);
+
+    lv_obj_t *btn1 = lv_btn_create(obj1);
+    lv_obj_set_size(btn1,50,50);
+   // lv_obj_set_x(btn1,50);
+   // lv_obj_set_y(btn1,50);
+   //lv_obj_set_y(btn1,100);
+   //lv_obj_set_y(btn1,-50);
+   //lv_obj_set_pos(btn1,50,50);
+
+    /*移动为正的话，超出父类的范围的话，会有一个滚动条的效果*/
+   lv_obj_set_pos(btn1,100,100);
+
+#endif // 0
+
+#if ALIGN_1 /*property : alignment  (parent)*/
+    lv_obj_t *obj2 = lv_obj_create(lv_scr_act());
+    lv_obj_t *obj3 = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(obj2,80,80);
+    lv_obj_set_size(obj3,80,80);
+    lv_obj_set_style_bg_color(obj3,lv_color_hex(0xff0000),0);//将矩形的控形设置为红色的一个API
+
+    lv_obj_set_align(obj2,LV_ALIGN_BOTTOM_MID);
+    lv_obj_set_align(obj3,LV_ALIGN_RIGHT_MID);
+
+    lv_obj_t *obj4 = lv_obj_create(obj3);
+    lv_obj_set_size(obj4,40,40);
+    lv_obj_set_style_pad_left(obj3,0,0);//矩形对象是一个盒子，在四周有海棉体，所以看到的没有完全地紧挨接左面，这个API可以把海棉去除掉
+    lv_obj_set_align(obj4,LV_ALIGN_LEFT_MID);
+
+    lv_obj_align(obj4,LV_ALIGN_BOTTOM_MID,40,40);//可以在对齐的基础上进行移动
+#endif // 1
+
+
+#if ALIGN_2/*property : alignment (brother)*/
+
+    /*父子关系的部件对齐的方式有9种，兄弟关系的部件对齐的方式有18种*/
+    lv_obj_t *obj1 = lv_obj_create(lv_scr_act());
+    lv_obj_t *obj2 = lv_obj_create(lv_scr_act());
+    lv_obj_center(obj1);//放到中间看得更清楚一点，不然OUT左边的会没有
+    lv_obj_set_size(obj2,60,60);
+    //lv_obj_align_to(obj2,obj1,LV_ALIGN_OUT_BOTTOM_RIGHT,0,0);
+    //lv_obj_align_to(obj2,obj1,LV_ALIGN_OUT_RIGHT_MID,0,0);
+    //lv_obj_align_to(obj2,obj1,LV_ALIGN_OUT_RIGHT_MID,40,0);
+    lv_obj_align_to(obj2,obj1,LV_ALIGN_OUT_LEFT_MID,0,0);
+#endif // ALIGN_2
+
+}
