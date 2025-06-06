@@ -3,6 +3,8 @@
 
 lvgl官网：https://docs.lvgl.io/master/examples.html#size-styles
 
+可以在官网中查看：各种的API、部件中有哪些枚举
+
 codeblocks下载：https://www.codeblocks.org/
 
 解决edge浏览器，下载失败的问题：使用右键就可以解决
