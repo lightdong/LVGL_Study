@@ -56,6 +56,15 @@ lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
 
 ![image](https://github.com/user-attachments/assets/ad6afb4a-6a3a-46bf-963b-0d0bdb997694)
 
+如何快速地查看颜色：
+1.win+R mspaint可以打开windows自带的画板：
+![image](https://github.com/user-attachments/assets/a3d005e3-decb-49ae-8ddd-aa4f6545e124)
+
+2.在颜色提取器里面可以看到具体RGB斯格式：
+![image](https://github.com/user-attachments/assets/7156060b-88cf-4068-b9dd-888057119b86)
+
+
+
 
 
 
