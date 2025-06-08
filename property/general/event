@@ -225,8 +225,10 @@ void test_property( ){
     lv_label_set_text(label1,"hello,world!!!");
     lv_obj_set_align(label1,LV_ALIGN_BOTTOM_LEFT);
 
-    lv_obj_add_event_cb(obj1,my_label,LV_EVENT_CLICKED,label1);
+    //lv_obj_add_event_cb(obj1,my_label,LV_EVENT_CLICKED,label1);
     lv_obj_add_event_cb(obj2,my_label,LV_EVENT_PRESSED,label1);
+    lv_obj_add_event_cb(obj1,my_label,LV_EVENT_PRESSING,label1);
+
 
 #endif // EVENT_2
 
@@ -282,6 +284,10 @@ void my_label(lv_event_t *e){
         case LV_EVENT_PRESSED:
             if(temp_obj == obj2)
                 lv_label_set_text(temp_lable,"obj2 pressed!!!");
+            break;
+        case LV_EVENT_PRESSING:
+            if(temp_obj == obj1)
+                lv_label_set_text(temp_lable,"obj1 pressing!!!");
             break;
         default:
             break;
