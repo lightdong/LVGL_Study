@@ -1,0 +1,290 @@
+#include "learn.h"
+#include "lvgl.h"
+#include "stdio.h" //里面有printf这个API
+
+#define SIZE 0
+#define POS 0
+#define ALIGN_1 0
+#define ALIGN_2 0
+
+#define STYLE_1 0
+#define STYLE_2 0
+#define STYLE_3 0
+#define PART 0
+
+#define EVENT_1 0
+#define EVENT_2 1
+
+lv_obj_t *obj1;
+lv_obj_t *obj2;
+//lv_obj_t *label1;
+int val = 10;
+
+void my_cb(lv_event_t *e);
+void my_label(lv_event_t *e);
+
+void test_property( ){
+#if SIZE/*property : size*/
+    lv_obj_t *obj0 = lv_obj_create(lv_scr_act());
+    /*size有关的API只有三个*/
+    //lv_obj_set_width(obj0,50);//改变宽度
+    //lv_obj_set_height(obj0,50);//改变高度
+    lv_obj_set_size(obj0,120,120);//改变尺寸,在这个API里面其实是调用的前两个函数
+
+    /*不管是父类还是子类，共用一套API*/
+    lv_obj_t *btn0 = lv_btn_create(obj0);
+   // lv_obj_set_width(btn0,60);
+   // lv_obj_set_height(btn0,60);
+    lv_obj_set_size(btn0,80,80);
+
+#endif // 1
+
+#if POS/*property : pos*/
+    /*以父类的左上角为基点，向左为x的正方向，向下为y的正方向*/
+    lv_obj_t *obj1 = lv_obj_create(lv_scr_act());
+    //lv_obj_set_x(obj1,50);
+    //lv_obj_set_y(obj1,50);
+    //lv_obj_set_y(obj1,-50);
+    lv_obj_set_pos(obj1,50,50);
+
+    lv_obj_t *btn1 = lv_btn_create(obj1);
+    lv_obj_set_size(btn1,50,50);
+   // lv_obj_set_x(btn1,50);
+   // lv_obj_set_y(btn1,50);
+   //lv_obj_set_y(btn1,100);
+   //lv_obj_set_y(btn1,-50);
+   //lv_obj_set_pos(btn1,50,50);
+
+    /*移动为正的话，超出父类的范围的话，会有一个滚动条的效果*/
+   lv_obj_set_pos(btn1,100,100);
+
+#endif // 0
+
+#if ALIGN_1 /*property : alignment  (parent)*/
+    lv_obj_t *obj2 = lv_obj_create(lv_scr_act());
+    lv_obj_t *obj3 = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(obj2,80,80);
+    lv_obj_set_size(obj3,80,80);
+    lv_obj_set_style_bg_color(obj3,lv_color_hex(0xff0000),0);//将矩形的控形设置为红色的一个API
+
+    lv_obj_set_align(obj2,LV_ALIGN_BOTTOM_MID);
+    lv_obj_set_align(obj3,LV_ALIGN_RIGHT_MID);
+
+    lv_obj_t *obj4 = lv_obj_create(obj3);
+    lv_obj_set_size(obj4,40,40);
+    lv_obj_set_style_pad_left(obj3,0,0);//矩形对象是一个盒子，在四周有海棉体，所以看到的没有完全地紧挨接左面，这个API可以把海棉去除掉
+    lv_obj_set_align(obj4,LV_ALIGN_LEFT_MID);
+
+    lv_obj_align(obj4,LV_ALIGN_BOTTOM_MID,40,40);//可以在对齐的基础上进行移动
+#endif // 1
+
+
+#if ALIGN_2/*property : alignment (brother)*/
+
+    /*父子关系的部件对齐的方式有9种，兄弟关系的部件对齐的方式有18种*/
+    lv_obj_t *obj1 = lv_obj_create(lv_scr_act());
+    lv_obj_t *obj2 = lv_obj_create(lv_scr_act());
+    lv_obj_center(obj1);//放到中间看得更清楚一点，不然OUT左边的会没有
+    lv_obj_set_size(obj2,60,60);
+    //lv_obj_align_to(obj2,obj1,LV_ALIGN_OUT_BOTTOM_RIGHT,0,0);
+    //lv_obj_align_to(obj2,obj1,LV_ALIGN_OUT_RIGHT_MID,0,0);
+    //lv_obj_align_to(obj2,obj1,LV_ALIGN_OUT_RIGHT_MID,40,0);
+    //lv_obj_align_to(obj2,obj1,LV_ALIGN_OUT_LEFT_MID,0,0);
+    lv_obj_align_to(obj2,obj1,LV_ALIGN_LEFT_MID,0,0);
+
+#endif // ALIGN_2
+
+/*
+修改样式方式一：obj_add_style
+               方式二：obj_set_style
+方式一的优点是全局存在，可以给不同的部件使用
+方式二的优点是可以快速复制大量的相同样式的部件,用方式一的话还要再重新定义一个有关样式的静态变量
+
+一般是两者配合使用，比如说可以obj_set_style后再obj_add_style给覆盖一下
+
+*/
+#if STYLE_1/*test_obj_add_style*/
+    /*先定义一个静态变量（样式的）并初始化，因为静态变量函数周期内都存在*/
+    static lv_style_t style1;
+    lv_style_init(&style1);
+
+    /*设置自己想要的样式*/
+    lv_style_set_bg_color(&style1,lv_color_hex(0x00ff00));//设置背景颜色,lv_color_hex这个API可以选择RGB888中的哪一个颜色
+    //lv_style_set_bg_opa(&style1,LV_OPA_30);//设置背景透明度
+    lv_style_set_bg_opa(&style1,LV_OPA_30);
+
+    /*将样式赋给部件，可以添加样式什么时候生效，并且应用到部件中的哪一部分,这里选择应用到默认*/
+    lv_obj_t *obj1 = lv_obj_create(lv_scr_act());
+    //lv_obj_add_style(obj1,&style1,LV_STATE_DEFAULT);//default是默认的意思
+
+    lv_obj_add_style(obj1,&style1,LV_STATE_PRESSED);//选择在按下时会改变颜色
+
+    /*部件的删除，删除一般不常用*/
+   // lv_obj_remove_style_all(obj1);//这个把整个部件都删除了
+    //lv_obj_remove_style(obj1,&style1,LV_STATE_DEFAULT);
+   //lv_obj_remove_style(obj1,&style1,LV_OPA_30);
+
+#endif // STYLE_1
+
+#if STYLE_2/*test_obj_set_style*/
+    lv_obj_t *obj1 = lv_obj_create(lv_scr_act());
+    lv_obj_t *obj2 = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(obj1,60,60);
+    lv_obj_set_size(obj2,60,60);
+    lv_obj_set_style_bg_color(obj1,lv_color_hex(0x0000ff),LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(obj1,LV_OPA_30,LV_STATE_PRESSED);
+    lv_obj_set_style_bg_color(obj1,lv_color_hex(0xff00ff),LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_opa(obj2,LV_OPA_30,LV_STATE_PRESSED);
+    lv_obj_set_style_bg_color(obj2,lv_color_hex(0xff00ff),LV_STATE_DEFAULT);
+    lv_obj_set_align(obj2,LV_ALIGN_BOTTOM_MID);
+
+
+#endif // STYLE_2
+
+#if STYLE_3/*样式的状态之间的关系*/
+    lv_obj_t *obj1 = lv_obj_create(lv_scr_act());
+    //lv_obj_set_style_bg_color(obj1,lv_color_hex(0x00ffff),LV_STATE_DEFAULT);
+    //lv_obj_set_style_bg_color(obj1,lv_color_hex(0x00ffff),LV_STATE_PRESSED);
+    lv_obj_set_style_bg_color(obj1,lv_color_hex(0x00ffff),LV_STATE_FOCUSED);//foucsed这种状态，点一下就有，点别出就会没有，可以用鼠标的光标来理解
+
+    /*再添加一个状态有专门的API*/
+    lv_obj_add_state(obj1,LV_STATE_PRESSED); //LV_STATE_FOCUSED | LV_STATE_PRESSED
+
+    /*去除一个状态也有专门的API*/
+    //另外clean不能取消默认状态因为至少要有一个状态
+    lv_obj_clear_state(obj1,LV_STATE_PRESSED);
+
+    /*判断是否有一个状态也有API*/
+    //另外API接口非常多可以自己去尝试
+    printf("/***STATE***/\n");
+    bool ret = lv_obj_has_state(obj1,LV_STATE_FOCUSED);
+    if(ret){
+        printf("has this state\n");
+    }else{
+        printf("has not this state\n");
+    }
+#endif // STYLE_3
+
+#if PART/*部件中的PART*/
+    lv_obj_t *slider1 = lv_slider_create(lv_scr_act());
+    lv_obj_set_size(slider1,180,20);
+    lv_obj_set_align(slider1,LV_ALIGN_CENTER);
+
+   //lv_obj_set_style_bg_color(slider1,lv_color_hex(0x00ffff),LV_STATE_DEFAULT | LV_PART_MAIN);//去单独修改
+    //lv_obj_set_style_bg_opa(slider1,LV_OPA_100,LV_STATE_DEFAULT | LV_PART_MAIN);//部件创建时，主体部分有默认的透明 度，可以自己在这里修改
+
+    /*但是下面是没有办法同时修改两个PART的，因为在LVGL中没有使用掩码，0x020000 | 0x030000 = 0x030000所以说只修改了操作句柄的部分*/
+   // lv_obj_set_style_bg_color(slider1,lv_color_hex(0x00ffff),LV_STATE_DEFAULT | LV_PART_MAIN|LV_PART_KNOB);//去单独修改
+   /*如果想去修改操作句柄，必须再调用一下API*/
+   lv_obj_set_style_bg_color(slider1,lv_color_hex(0x00ffff),LV_STATE_DEFAULT | LV_PART_KNOB);
+   /*也可以去更改，状态*/
+   //lv_obj_set_style_bg_color(slider1,lv_color_hex(0x00ffff),LV_STATE_PRESSED | LV_PART_KNOB);
+
+
+   /*最后弄一个总的*/
+   lv_obj_set_style_bg_color(slider1,lv_color_hex(0xff0000),LV_STATE_DEFAULT | LV_PART_MAIN);
+   lv_obj_set_style_bg_opa(slider1,LV_OPA_100,LV_STATE_DEFAULT|LV_PART_MAIN);
+
+   lv_obj_set_style_bg_color(slider1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT | LV_PART_INDICATOR);
+
+   lv_obj_set_style_bg_color(slider1,lv_color_hex(0x0000ff),LV_STATE_DEFAULT | LV_PART_KNOB);
+
+    /*注意或PART的enum时不是掩码v8.3*/
+#endif // PART
+
+#if EVENT_1/*测试回调函数，以及对不同事件的响应，并在回调函数中获得哪一个obj触发以及哪一个事件触发*/
+    obj1 = lv_obj_create(lv_scr_act());
+    obj2 = lv_obj_create(lv_scr_act());
+    lv_obj_set_style_bg_color(obj2,lv_color_hex(0x0000ff),LV_STATE_DEFAULT);
+    lv_obj_set_size(obj1,60,60);
+    lv_obj_set_size(obj2,60,60);
+
+    lv_obj_center(obj1);
+    /*可以添加不同的事件，也样式的状态一样，也不能通过或的方式来实现*/
+    //LV_EVENT_PRESSED
+    //LV_EVENT_PRESSING
+    //LV_EVENT_CLICKED
+    /*注意传参时要用全局变量，不要使用局部变量*/
+    lv_obj_add_event_cb(obj1,my_cb,LV_EVENT_CLICKED,&val);
+    //lv_obj_add_event_cb(obj1,my_cb,LV_EVENT_PRESSED,NULL);
+    //lv_obj_add_event_cb(obj1,my_cb,LV_EVENT_PRESSING,NULL);
+
+    /*不同的部件可以使用同一个事件影响的回响函数*/
+    lv_obj_add_event_cb(obj2,my_cb,LV_EVENT_CLICKED,NULL);
+
+#endif // EVENT
+
+#if EVENT_2/*以一个对象为user_data传入到回调函数中*/
+    obj1 = lv_obj_create(lv_scr_act());
+    obj2 = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(obj2,80,80);
+    lv_obj_set_size(obj1,80,80);
+    lv_obj_center(obj2);
+    lv_obj_t *label1 = lv_label_create(lv_scr_act());
+    lv_label_set_text(label1,"hello,world!!!");
+    lv_obj_set_align(label1,LV_ALIGN_BOTTOM_LEFT);
+
+    lv_obj_add_event_cb(obj1,my_label,LV_EVENT_CLICKED,label1);
+    lv_obj_add_event_cb(obj2,my_label,LV_EVENT_PRESSED,label1);
+
+#endif // EVENT_2
+
+}
+
+
+
+void my_cb(lv_event_t *e){
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    /*如果事件发生后没有参数传递过来，判断一下不去做处理*/
+    /*空指针不太好，可能会让程序崩掉*/
+    int *temp = (int*)lv_event_get_user_data(e);
+    if(temp == NULL){
+        printf("wrong argument!!!\n");
+        return;
+    }
+    if(code == LV_EVENT_CLICKED){
+        if(target == obj1){
+           //temp = *(int*)lv_event_get_user_data(e);
+            printf("obj1 has LV_EVENT_CLICKED!!!\n");
+            printf("obj1 val is %d\n",*temp);
+        }else if(target ==obj2){
+             printf("obj2 has LV_EVENT_CLICKED!!!\n");
+        }
+    }else if(code == LV_EVENT_PRESSED){
+        printf("obj1 has LV_EVENT_PRESSED!!!\n");
+    }else if(code == LV_EVENT_PRESSING){
+        printf("obj1 has LV_EVENT_PRESSING!!!\n");
+    }
+}
+
+void my_label(lv_event_t *e){
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *temp_obj = lv_event_get_target(e);
+    if(temp_obj == NULL){
+        printf("target obj pointer is NULL!!!\n");
+        return;
+    }
+    /*虽然label是一个函数内的局部变量，但是对象会存在在堆中（动态分配），可以把地址传递过来*/
+    lv_obj_t *temp_lable = (lv_obj_t *)lv_event_get_user_data(e);
+    if(temp_lable == NULL){
+        printf("user_data pointer is NULL!!!\n");
+        return;
+    }
+    switch (code){
+        case LV_EVENT_CLICKED:
+            if(temp_obj == obj1)
+                lv_label_set_text(temp_lable,"obj1 clicked!!!");
+            else if(temp_obj == obj2)
+                lv_label_set_text(temp_lable,"obj2 clicked!!!");
+            break;
+        case LV_EVENT_PRESSED:
+            if(temp_obj == obj2)
+                lv_label_set_text(temp_lable,"obj2 pressed!!!");
+            break;
+        default:
+            break;
+    }
+}
+
