@@ -50,5 +50,14 @@ lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
 在下面可以修改配色&高亮的方案
 ![image](https://github.com/user-attachments/assets/5bb0da91-11f6-4795-b577-a6cecf1dbe05)
 
+左边的树不见了，怎么解决：shift + F2
+
+下面的框不见了，怎么解决：
+
+![image](https://github.com/user-attachments/assets/ad6afb4a-6a3a-46bf-963b-0d0bdb997694)
+
+
+
+
 
 
