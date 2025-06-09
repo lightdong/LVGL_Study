@@ -97,6 +97,8 @@ lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
 
 多行取注注释：ctrl+shift+x
 
+https://github.com/Dozingfiretruck/lvgl_conv_tool
+
 
 
 
