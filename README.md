@@ -97,6 +97,7 @@ lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
 
 多行取注注释：ctrl+shift+x
 
+网上找了一个up的开源的字体工具（很润):
 https://github.com/Dozingfiretruck/lvgl_conv_tool
 
 
