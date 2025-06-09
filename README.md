@@ -89,6 +89,10 @@ lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
 字体的信息存在相关的.c文件中
 ![image](https://github.com/user-attachments/assets/3f52b79d-453c-4a3a-aada-3398bd2a9b1e)
 
+用下面的方法，可以设置UTF-8
+![image](https://github.com/user-attachments/assets/78ffb420-2432-495d-bb34-cb74789c719e)
+
+
 
 
 
