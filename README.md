@@ -80,6 +80,17 @@ lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
 ![image](https://github.com/user-attachments/assets/310883d4-a617-41bd-9946-f294efc8ef51)
 
 
+在lvgl中使用相应字体时，要开启相应的宏，字体相关的宏定义在lv_conf.h中
+
+![image](https://github.com/user-attachments/assets/b143e5ff-d3a4-4f02-a1ca-cf75d8c27a11)
+
+把宏定义修改为1即可
+
+字体的信息存在相关的.c文件中
+![image](https://github.com/user-attachments/assets/3f52b79d-453c-4a3a-aada-3398bd2a9b1e)
+
+
+
 
 
 
