@@ -93,6 +93,11 @@ lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
 ![image](https://github.com/user-attachments/assets/78ffb420-2432-495d-bb34-cb74789c719e)
 
 
+多行注释：ctrl+shift+c
+
+多行取注注释：ctrl+shift+c
+
+
 
 
 
