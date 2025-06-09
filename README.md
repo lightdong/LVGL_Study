@@ -64,6 +64,14 @@ lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
 ![image](https://github.com/user-attachments/assets/7156060b-88cf-4068-b9dd-888057119b86)
 
 
+可以在工程文件夹下添加自己的文件：
+![image](https://github.com/user-attachments/assets/9c17cee4-2aa6-4e04-98fa-f92378c164d9)
+在工程中添加文件夹后，就会有对应的.c与.h文件
+![image](https://github.com/user-attachments/assets/a953fadf-8239-4051-9cb1-e92e70931ffe)
+![image](https://github.com/user-attachments/assets/45ef506f-ab12-4a0e-bf42-1cc280607102)
+
+
+
 
 
 
