@@ -100,6 +100,8 @@ lv_win32_init(hInstance, SW_SHOWNORMAL, 240, 240, NULL);
 网上找了一个up的开源的字体工具（很润):
 https://github.com/Dozingfiretruck/lvgl_conv_tool
 
+在左侧发行版本中下载
+
 
 
 
