@@ -1,1 +1,33 @@
+#include "learn.h"
+#include "lvgl.h"
+#include "stdio.h"
+//#pragma execution_character_set("utf-8")
+#define MY_USB_SYMBOL "\xE5\xA4\xA9"
+//extern const lv_font_t test_chinese;
+LV_FONT_DECLARE(yaodong_test)
+
+
+void widgets_learn( ){
+
+    lv_obj_t *label1 = lv_label_create(lv_scr_act());
+    lv_obj_center(label1);
+    lv_obj_set_size(label1,200,50);
+    lv_obj_set_style_bg_color(label1, lv_color_hex(0xFF0000),LV_STATE_DEFAULT| LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(label1, LV_OPA_10, LV_STATE_DEFAULT|LV_PART_MAIN);
+    //lv_obj_set_style_text_font(label1,&lv_font_simsun_16_cjk,LV_STATE_DEFAULT|LV_PART_MAIN);
+    //lv_obj_set_style_text_font(label1,&lv_font_montserrat_14,LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_text_font(label1,&yaodong_test,LV_STATE_DEFAULT|LV_PART_MAIN);
+    //lv_obj_set_style_text_color(label1,lv_color_hex(0xff00ff),LV_STATE_DEFAULT|LV_PART_MAIN);
+    printf("font on");
+    lv_label_set_text(label1,"	\xE5\xA4\xA9");
+    //lv_label_set_text(label1,"星消);
+    //lv_label_set_long_mode(label1,LV_LABEL_LONG_WRAP);
+    //lv_label_set_text(label1,LV_SYMBOL_AUDIO);
+    /*也可以在图标后面直接添加文本*/
+    //lv_label_set_text(label1,LV_SYMBOL_BLUETOOTH"string");
+    /*也可以通过格式化输出的方法来显示图标*/
+    //lv_label_set_text_fmt(label1,"logo%s",LV_SYMBOL_BLUETOOTH);
+    printf("I can show");
+
+}
 
