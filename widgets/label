@@ -1,1 +1,80 @@
+#include "lvgl.h"
+
+#define LABEL 1
+
+#pragma execution_character_set("utf-8")
+//extern const lv_font_t yaodong_first;
+//extern const lv_font_t yaodong_second;
+
+LV_FONT_DECLARE(yaodong_first);
+LV_FONT_DECLARE(yaodong_second);
+
+void widgets_label_btn(void){
+    char *my_message = "带";
+    #if LABEL
+    /*对于label而言，只能通过调取接口修改里面的文本*/
+    /*那种手动有下拉框输入的，叫做输入框*/
+    lv_obj_t *label1 = lv_label_create(lv_scr_act());
+    lv_obj_center(label1);
+    lv_obj_set_size(label1,100,30);
+    lv_obj_set_style_bg_color(label1,lv_color_hex(0xff0000),LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(label1,LV_OPA_50,LV_STATE_DEFAULT|LV_PART_MAIN);
+    // lv_label_set_long_mode(label1,LV_LABEL_LONG_SCROLL_CIRCULAR);
+    /*设置了set_size才可以循环，不然会一定延伸出弹性界面而不会循环播放*/
+    //lv_label_set_recolor(label1,true);
+    //lv_label_set_text(label1,"#ffff00 aaa##ff00ff bbb##00ffff ccc##001111 ddd##110011 eee##001111 fff##999999 ggg#hhhiiijjjkkk");
+    //lv_label_set_text(label1,"#ffff00 aaa##ff00ff bbb##00ffff ccc#");
+    lv_obj_set_style_text_font(label1,&lv_font_simsun_16_cjk,LV_STATE_DEFAULT|LV_PART_MAIN);//lv_font_simsun_16_cjk里面提供了1000字的中文字库
+    lv_label_set_text(label1,my_message);
+    //lv_label_set_text_sel_start(label1,0);
+    //lv_label_set_text_sel_end(label1,3);
+    //lv_obj_set_style_bg_color(label1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT|LV_PART_SELECTED);
+    //LV_LABEL_LONG_WRAP
+    //LV_LABEL_LONG_DOT //一但超出文本后，会自动省略为...
+    //LV_LABEL_LONG_SCROLL//左右来回滚动播放
+    //LV_LABEL_LONG_SCROLL_CIRCULAR//循环滚动播放
+    //LV_LABEL_LONG_CLIP
+
+    /*设置文本内容有多种方式*/
+    /*静态设置文本的方式好像有一点问题，先不去弄了,感觉下面两种方法是最常用的*/
+    /*可以单独给个别文本设置颜色 ，#color text#的方式，但是##之间不可以出现\n，而且要注意空格的使用*/
+    //lv_label_set_recolor(label1,true);//这个函数是使用“#color text#”的前提
+    //lv_label_set_text(label1,"#00ff00 liu# #00ffff yaodong#\n#ff00ff you can do this#");
+    // lv_label_set_text_fmt(label1,"age : %d",22);//有点像C库中printf的用法
+    // lv_label_set_text(label1,"liu\nyaodong\n元\n曜东");  //也是可以支持换行操作的
+    //  lv_label_set_text(label1,"元") ;//不知道为什么，我尝试了好久中文都无法显示
+    /*也可以给文本设置一些样式，比如说*/
+    //bg_color
+    //bg_opa
+    //text_font
+    //text_color
+    //text_align
+    //text_letter_align
+    //text_line_space
+    //text_decor
+    /*如果是切换字体的话，工程需要重新编译一下这需要一定的时间*/
+    //lv_obj_set_style_text_font(label1,&lv_font_montserrat_40,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*如果是要显然中文的话也是可以的，但是要使用到中文的字库，并把编码设置为UTF_8*/
+    //lv_obj_set_style_text_font(label1,&lv_font_simsun_16_cjk,LV_STATE_DEFAULT|LV_PART_MAIN);//lv_font_simsun_16_cjk里面提供了1000字的中文字库
+    //lv_obj_set_style_text_font(label1,&yaodong_second,LV_STATE_DEFAULT|LV_PART_MAIN);//lv_font_simsun_16_cjk里面提供了1000字的中文字库
+    //lv_obj_set_style_text_color(label1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT|LV_PART_MAIN );//好像只能通过修改主体来修改颜色
+    /*也可以设置文本的对齐方式*/
+    //LV_TEXT_ALIGN_AUTO 默认就是左侧对齐
+    //LV_TEXT_ALIGN_LEFT
+    //LV_TEXT_ALIGN_CENTER
+    //LV_TEXT_ALIGN_RIGHT
+    //lv_obj_set_style_text_align(label1,LV_TEXT_ALIGN_CENTER,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*也可以设置字母的间距*/
+    //lv_obj_set_style_text_letter_space(label1,5,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*也可以设置行之间的间距*/
+    //lv_obj_set_style_text_line_space(label1,5,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*也可以设置，下划线与删除线等*/
+    //LV_TEXT_DECOR_NONE
+    //LV_TEXT_DECOR_UNDERLINE   下划线
+    //LV_TEXT_DECOR_STRIKETHROUGH   删除线      可以使用或运算
+    //lv_obj_set_style_text_decor(label1,LV_TEXT_DECOR_UNDERLINE|LV_TEXT_DECOR_STRIKETHROUGH,LV_STATE_DEFAULT|LV_PART_MAIN);
+
+    #endif // LABEL
+}
+
 
