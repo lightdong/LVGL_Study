@@ -1,1 +1,43 @@
+    #if BTN /*将btn与label结合*/
+    lv_obj_t *btn1 = lv_btn_create(lv_scr_act());
+    lv_obj_center(btn1);
+    /*如果没有设置大小的话会弹性扩充*/
+    lv_obj_set_size(btn1,50,30);
 
+    lv_obj_t *btn1_label1 = lv_label_create(btn1);
+    lv_obj_center(btn1_label1);
+    lv_label_set_text(btn1_label1,"btn1");
+
+    /*给button添加样式*/
+    lv_obj_set_style_bg_color(btn1,lv_color_hex(0xff0000),LV_STATE_PRESSED|LV_PART_MAIN);
+    lv_obj_set_style_border_color(btn1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_border_width(btn1,3,LV_STATE_DEFAULT|LV_PART_MAIN);
+
+    /*给button添加事件*/
+    //lv_obj_flag_checkable这个东西开启后可以触发lv_event_value_change这个事件
+    //因为checked在这里是选中的意思，而且lvgl的架构中选中应该会改变一个值，从而触发了lv_event_value_change这个事件
+    //像复选框的那种样式，lv_obj_flag_checkable是默认打开的，但是btn就没有这个flag是清除掉了的，所以还要手动地添加这个flag
+    lv_obj_add_flag(btn1,LV_OBJ_FLAG_CHECKABLE);
+    lv_obj_add_event_cb(btn1,btn_cb,LV_EVENT_VALUE_CHANGED,NULL);
+    lv_obj_add_event_cb(btn1,btn_cb,LV_EVENT_PRESSED,NULL);
+    lv_obj_add_event_cb(btn1,btn_cb,LV_EVENT_CLICKED,NULL);
+    #endif // BTN
+}
+int temp;
+static void btn_cb(lv_event_t *e){
+    /*看一下回调函数被调用了几次*/
+    printf("temp : %d",++temp);
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if(code == LV_EVENT_VALUE_CHANGED){
+        /*验证状态是否存在*/
+        if(true == lv_obj_has_state(target,LV_STATE_CHECKED))
+           printf("checked");
+        else
+            printf("none checked");
+        printf("LV_EVENT_VALUE_CHANGED\n");
+    }else if(code == LV_EVENT_PRESSED)
+        printf("LV_EVENT_PRESSED\n");
+    else if(code == LV_EVENT_CLICKED)
+        printf("LV_EVENT_CLICKED\n");
+}
