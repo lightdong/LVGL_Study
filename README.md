@@ -103,6 +103,11 @@ https://github.com/Dozingfiretruck/lvgl_conv_tool
 在左侧发行版本中下载
 
 
+系统库里面的默认图标：
+
+![image](https://github.com/user-attachments/assets/be036119-573b-4fef-9668-500dd00b626b)
+
+
 
 
 
