@@ -1,0 +1,452 @@
+#include "lvgl.h"
+#include <stdio.h>
+
+#define LABEL 0
+#define BTN 0
+#define PROJECT_1 0
+#define SWITCH_TEST 0
+#define LINE_TEST 0
+#define CHECKBOX_TEST 0
+#define SLIDER_TEST 1
+
+//extern const lv_font_t yaodong_first;
+//extern const lv_font_t yaodong_second;
+
+LV_FONT_DECLARE(yaodong_first);
+LV_FONT_DECLARE(yaodong_second);
+
+static void btn_cb(lv_event_t *e);
+static void FanSpeedcb(lv_event_t *e);
+static void sw_cb(lv_event_t *e);
+static void checkbox_cb(lv_event_t *e);
+static void slider_cb(lv_event_t *e);
+
+/*枚举量默认从0开始*/
+enum BTN_INDEX{
+    BTN1,
+    BTN2,
+    BTN3
+};
+
+lv_obj_t *old_checkbox; //用于接收上一个部件
+
+void widgets_test(void){
+    //char *my_message = "带";
+    #if LABEL
+    /*对于label而言，只能通过调取接口修改里面的文本*/
+    /*那种手动有下拉框输入的，叫做输入框*/
+    lv_obj_t *label1 = lv_label_create(lv_scr_act());
+    lv_obj_center(label1);
+    lv_obj_set_size(label1,100,30);
+    lv_obj_set_style_bg_color(label1,lv_color_hex(0xff0000),LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(label1,LV_OPA_50,LV_STATE_DEFAULT|LV_PART_MAIN);
+    // lv_label_set_long_mode(label1,LV_LABEL_LONG_SCROLL_CIRCULAR);
+    /*设置了set_size才可以循环，不然会一定延伸出弹性界面而不会循环播放*/
+    //lv_label_set_recolor(label1,true);
+    //lv_label_set_text(label1,"#ffff00 aaa##ff00ff bbb##00ffff ccc##001111 ddd##110011 eee##001111 fff##999999 ggg#hhhiiijjjkkk");
+    //lv_label_set_text(label1,"#ffff00 aaa##ff00ff bbb##00ffff ccc#");
+    lv_obj_set_style_text_font(label1,&lv_font_simsun_16_cjk,LV_STATE_DEFAULT|LV_PART_MAIN);//lv_font_simsun_16_cjk里面提供了1000字的中文字库
+    lv_label_set_text(label1,my_message);
+    //lv_label_set_text_sel_start(label1,0);
+    //lv_label_set_text_sel_end(label1,3);
+    //lv_obj_set_style_bg_color(label1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT|LV_PART_SELECTED);
+    //LV_LABEL_LONG_WRAP
+    //LV_LABEL_LONG_DOT //一但超出文本后，会自动省略为...
+    //LV_LABEL_LONG_SCROLL//左右来回滚动播放
+    //LV_LABEL_LONG_SCROLL_CIRCULAR//循环滚动播放
+    //LV_LABEL_LONG_CLIP
+
+    /*设置文本内容有多种方式*/
+    /*静态设置文本的方式好像有一点问题，先不去弄了,感觉下面两种方法是最常用的*/
+    /*可以单独给个别文本设置颜色 ，#color text#的方式，但是##之间不可以出现\n，而且要注意空格的使用*/
+    //lv_label_set_recolor(label1,true);//这个函数是使用“#color text#”的前提
+    //lv_label_set_text(label1,"#00ff00 liu# #00ffff yaodong#\n#ff00ff you can do this#");
+    // lv_label_set_text_fmt(label1,"age : %d",22);//有点像C库中printf的用法
+    // lv_label_set_text(label1,"liu\nyaodong\n元\n曜东");  //也是可以支持换行操作的
+    //  lv_label_set_text(label1,"元") ;//不知道为什么，我尝试了好久中文都无法显示
+    /*也可以给文本设置一些样式，比如说*/
+    //bg_color
+    //bg_opa
+    //text_font
+    //text_color
+    //text_align
+    //text_letter_align
+    //text_line_space
+    //text_decor
+    /*如果是切换字体的话，工程需要重新编译一下这需要一定的时间*/
+    //lv_obj_set_style_text_font(label1,&lv_font_montserrat_40,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*如果是要显然中文的话也是可以的，但是要使用到中文的字库，并把编码设置为UTF_8*/
+    //lv_obj_set_style_text_font(label1,&lv_font_simsun_16_cjk,LV_STATE_DEFAULT|LV_PART_MAIN);//lv_font_simsun_16_cjk里面提供了1000字的中文字库
+    //lv_obj_set_style_text_font(label1,&yaodong_second,LV_STATE_DEFAULT|LV_PART_MAIN);//lv_font_simsun_16_cjk里面提供了1000字的中文字库
+    //lv_obj_set_style_text_color(label1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT|LV_PART_MAIN );//好像只能通过修改主体来修改颜色
+    /*也可以设置文本的对齐方式*/
+    //LV_TEXT_ALIGN_AUTO 默认就是左侧对齐
+    //LV_TEXT_ALIGN_LEFT
+    //LV_TEXT_ALIGN_CENTER
+    //LV_TEXT_ALIGN_RIGHT
+    //lv_obj_set_style_text_align(label1,LV_TEXT_ALIGN_CENTER,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*也可以设置字母的间距*/
+    //lv_obj_set_style_text_letter_space(label1,5,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*也可以设置行之间的间距*/
+    //lv_obj_set_style_text_line_space(label1,5,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*也可以设置，下划线与删除线等*/
+    //LV_TEXT_DECOR_NONE
+    //LV_TEXT_DECOR_UNDERLINE   下划线
+    //LV_TEXT_DECOR_STRIKETHROUGH   删除线      可以使用或运算
+    //lv_obj_set_style_text_decor(label1,LV_TEXT_DECOR_UNDERLINE|LV_TEXT_DECOR_STRIKETHROUGH,LV_STATE_DEFAULT|LV_PART_MAIN);
+    #endif // LABEL
+
+    #if BTN /*将btn与label结合*/
+    lv_obj_t *btn1 = lv_btn_create(lv_scr_act());
+    lv_obj_center(btn1);
+    /*如果没有设置大小的话会弹性扩充*/
+    lv_obj_set_size(btn1,50,30);
+
+    lv_obj_t *btn1_label1 = lv_label_create(btn1);
+    lv_obj_center(btn1_label1);
+    lv_label_set_text(btn1_label1,"btn1");
+
+    /*给button添加样式*/
+    lv_obj_set_style_bg_color(btn1,lv_color_hex(0xff0000),LV_STATE_PRESSED|LV_PART_MAIN);
+    lv_obj_set_style_border_color(btn1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_border_width(btn1,3,LV_STATE_DEFAULT|LV_PART_MAIN);
+
+    /*给button添加事件*/
+    //lv_obj_flag_checkable这个东西开启后可以触发lv_event_value_change这个事件
+    //因为checked在这里是选中的意思，而且lvgl的架构中选中应该会改变一个值，从而触发了lv_event_value_change这个事件
+    //像复选框的那种样式，lv_obj_flag_checkable是默认打开的，但是btn就没有这个flag是清除掉了的，所以还要手动地添加这个flag
+    lv_obj_add_flag(btn1,LV_OBJ_FLAG_CHECKABLE);
+    lv_obj_add_event_cb(btn1,btn_cb,LV_EVENT_VALUE_CHANGED,NULL);
+    lv_obj_add_event_cb(btn1,btn_cb,LV_EVENT_PRESSED,NULL);
+    lv_obj_add_event_cb(btn1,btn_cb,LV_EVENT_CLICKED,NULL);
+    #endif // BTN
+
+    #if PROJECT_1/*来一个综合的demo*/
+    /*创建一个标签来模拟风扇的状态*/
+    lv_obj_t *FanSpeed = lv_label_create(lv_scr_act());
+    lv_label_set_text(FanSpeed,"SPEEDdefault");
+    lv_obj_align(FanSpeed,LV_ALIGN_TOP_MID,0,20);
+    lv_label_set_recolor(FanSpeed,true);
+
+
+    /*创建三个按键，来控制风扇*/
+    /*为三个按键创建父对象,再创建三个按键,并分配好布局*/
+    lv_obj_t *FanSpeedObj = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(FanSpeedObj,150,180);
+    lv_obj_align(FanSpeedObj,LV_ALIGN_TOP_MID,0,50);
+    lv_obj_set_style_pad_all(FanSpeedObj,0,LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_t *FanSpeeBtn1 = lv_btn_create(FanSpeedObj);
+    lv_obj_t *FanSpeeBtn2 = lv_btn_create(FanSpeedObj);
+    lv_obj_t *FanSpeeBtn3 = lv_btn_create(FanSpeedObj);
+    lv_obj_set_size(FanSpeeBtn1,100,40);
+    lv_obj_set_size(FanSpeeBtn2,100,40);
+    lv_obj_set_size(FanSpeeBtn3,100,40);
+    lv_obj_align(FanSpeeBtn1,LV_ALIGN_TOP_MID,0,15);
+    lv_obj_align_to(FanSpeeBtn2,FanSpeeBtn1,LV_ALIGN_OUT_BOTTOM_MID,0,15);
+    lv_obj_align_to(FanSpeeBtn3,FanSpeeBtn2,LV_ALIGN_OUT_BOTTOM_MID,0,15);
+    /*统一对三个按键的样式进行添加，可以采用add_style的方式*/
+    static lv_style_t btn_style;
+    lv_style_init(&btn_style);
+    lv_style_set_bg_color(&btn_style,lv_color_hex(0x9260F2));
+    lv_style_set_shadow_width(&btn_style,6);
+    lv_style_set_shadow_color(&btn_style,lv_color_hex(0x50C2A7));
+    lv_style_set_shadow_ofs_x(&btn_style,6);
+    lv_style_set_shadow_ofs_x(&btn_style,6);
+    lv_style_set_shadow_spread(&btn_style,3);
+    lv_obj_add_style(FanSpeeBtn1,&btn_style,LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_add_style(FanSpeeBtn2,&btn_style,LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_add_style(FanSpeeBtn3,&btn_style,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*给每一个按键创建一个标签,并把三个标签放到父对象的中间，并设置文字*/
+    lv_obj_t *FanSpeeBtn1_lab1 = lv_label_create(FanSpeeBtn1);
+    lv_obj_t *FanSpeeBtn2_lab1 = lv_label_create(FanSpeeBtn2);
+    lv_obj_t *FanSpeeBtn3_lab1 = lv_label_create(FanSpeeBtn3);
+    lv_obj_center(FanSpeeBtn1_lab1);
+    lv_obj_center(FanSpeeBtn2_lab1);
+    lv_obj_center(FanSpeeBtn3_lab1);
+    lv_label_set_text(FanSpeeBtn1_lab1,"LEVEL1");
+    lv_label_set_text(FanSpeeBtn2_lab1,"LEVEL2");
+    lv_label_set_text(FanSpeeBtn3_lab1,"LEVEL3");
+
+    /*添加事件*/
+    /*可以给每一个按钮都添加事件，也可以把三个按键的标志位设置为event_bubble*/
+    /*这样可以传递给父部件，可以非常方便用一个函数处理*/
+    /*并关闭掉父对象的可点击属性*/
+    lv_obj_add_flag(FanSpeeBtn1,LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_flag(FanSpeeBtn2,LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_flag(FanSpeeBtn3,LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_event_cb(FanSpeedObj,FanSpeedcb,LV_EVENT_CLICKED,FanSpeed);
+    lv_obj_clear_flag(FanSpeedObj,LV_OBJ_FLAG_CLICKABLE);
+    #endif // PROJECT_1
+
+    #if SWITCH_TEST/*调试一下开关相关的API*/
+    /*switch有三个part   mian indicator knob*/
+    /*创建一个开关居中并设置得大一点*/
+    lv_obj_t *sw1  = lv_switch_create(lv_scr_act());
+    lv_obj_center(sw1);
+    lv_obj_set_size(sw1,120,80);
+
+    /*设置部件的样式*/
+    lv_obj_set_style_bg_color(sw1,lv_color_hex(0xD7E8A3),LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_bg_color(sw1,lv_color_hex(0xAF1DF7),LV_STATE_CHECKED|LV_PART_INDICATOR);//选中状态时会生效，才可以正常显示颜色,如何是默认的话不会正常显示
+    lv_obj_set_style_bg_color(sw1,lv_color_hex(0x407887),LV_STATE_CHECKED|LV_PART_KNOB);
+    lv_obj_set_style_outline_color(sw1,lv_color_hex(0xD649AF),LV_STATE_CHECKED|LV_PART_MAIN);
+    lv_obj_set_style_outline_pad(sw1,5,LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_outline_width(sw1,2,LV_STATE_DEFAULT|LV_PART_MAIN);
+
+    /*设置部件的状态与事件*/
+    lv_obj_add_state(sw1,LV_STATE_CHECKED);
+    lv_obj_add_flag(sw1,LV_OBJ_FLAG_CHECKABLE);//对于switch来说，选中默认是打开的
+    lv_obj_add_event_cb(sw1,sw_cb,LV_EVENT_VALUE_CHANGED,NULL);//必须开启，flag_checkable才可以触发这一个事件
+
+    /*也可以把knob设置得大一点*/
+    lv_obj_set_style_pad_all(sw1,10,LV_STATE_CHECKED|LV_PART_KNOB);
+
+
+    #endif // SWITCH_TEST
+
+    #if LINE_TEST
+    /*对一组坐标，依次连接，绘制线段*/
+    /*part : mian（只有一个主体）*/
+    /*lv_point_t 是一个结构体数组*/
+    //static lv_point_t my_line[] = {{60,60},{120,120}};
+    /*如果是想绘制一个三角形，那么要传递四个点，因为是把坐标依次连接*/
+    static lv_point_t my_line[] = {{60,60},{90,120},{30,120},{60,60}};
+    lv_obj_t *line1 = lv_line_create(lv_scr_act());
+    lv_line_set_points(line1,my_line,4);
+
+    /*设置线条的样式*/
+    lv_obj_set_style_line_width(line1,5,LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_line_rounded(line1,true,LV_STATE_DEFAULT|LV_PART_MAIN);//两个不再是一个直角的矩形，而是一个圆点
+    lv_obj_set_style_line_color(line1,lv_color_hex(0x0000ff),LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_line_opa(line1,LV_OPA_50,LV_STATE_DEFAULT|LV_PART_MAIN);
+
+    /*翻转坐标（镜像）*/
+    lv_line_set_y_invert(line1,false);
+
+    /*设置虚线（好像只能是水平线或垂直线）*/
+    lv_obj_set_style_line_dash_width(line1,4,LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_line_dash_gap(line1,15,LV_STATE_DEFAULT|LV_PART_MAIN);
+    #endif // LINE_TEST
+
+    #if CHECKBOX_TEST/*测试复选框相关的函数*/
+    /*part : main    indicator*/
+    /*创建一个复选框*/
+    lv_obj_t *checkbox1 = lv_checkbox_create(lv_scr_act());
+    lv_obj_center(checkbox1);
+
+    /*改变复选框文本的内容*/
+    lv_checkbox_set_text(checkbox1,"my_checkbox");
+
+    /*设置复选框的样式*/
+    lv_obj_set_style_bg_color(checkbox1,lv_color_hex(0x0000ff),LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(checkbox1,LV_OPA_50,LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_size(checkbox1,140,40);//只能增大主体的宽度，并不会增加指示器的大小
+    lv_obj_set_style_pad_all(checkbox1,10,LV_STATE_DEFAULT|LV_PART_INDICATOR);//可以通过增大指示器的填充来改变指示器的大小
+    lv_obj_set_style_pad_column(checkbox1,10,LV_STATE_DEFAULT|LV_PART_MAIN);//设置对象内元素的间距,这里可以作为调整文本到指示器的距离用
+    lv_obj_set_style_radius(checkbox1,LV_RADIUS_CIRCLE,LV_STATE_DEFAULT|LV_PART_INDICATOR);//方形指示器改为圆形指示器
+    lv_obj_set_style_bg_img_src(checkbox1,NULL,LV_STATE_CHECKED|LV_PART_INDICATOR);//不再去添加一个√
+    lv_obj_add_state(checkbox1,LV_STATE_CHECKED);//手动添加的话可以进入到这种选中的状态中
+    lv_obj_clear_state(checkbox1,LV_STATE_CHECKED);
+
+    /*创建三个复选框，并设置样式*/
+    lv_obj_set_align(checkbox1,LV_ALIGN_TOP_LEFT);
+    lv_obj_t *checkbox2 = lv_checkbox_create(lv_scr_act());
+    lv_obj_t *checkbox3 = lv_checkbox_create(lv_scr_act());
+    lv_obj_t *checkbox4 = lv_checkbox_create(lv_scr_act());
+    old_checkbox = checkbox2;
+
+    lv_obj_align(checkbox2,LV_ALIGN_CENTER,0,-60);
+    lv_obj_align_to(checkbox3,checkbox2,LV_ALIGN_OUT_BOTTOM_MID,0,20);
+    lv_obj_align_to(checkbox4,checkbox3,LV_ALIGN_OUT_BOTTOM_MID,0,20);
+
+    lv_obj_set_style_radius(checkbox2,LV_RADIUS_CIRCLE,LV_STATE_DEFAULT|LV_PART_INDICATOR);
+    lv_obj_set_style_bg_img_src(checkbox3,NULL,LV_STATE_CHECKED|LV_PART_INDICATOR);
+
+    lv_obj_set_style_border_color(checkbox2,lv_color_hex(0xff00ff),LV_STATE_DEFAULT|LV_PART_INDICATOR);
+    lv_obj_set_style_border_color(checkbox3,lv_color_hex(0x00ffff),LV_STATE_DEFAULT|LV_PART_INDICATOR);
+    lv_obj_set_style_border_color(checkbox4,lv_color_hex(0x0000ff),LV_STATE_DEFAULT|LV_PART_INDICATOR);
+
+    /*如何同时只能勾选一个复选框*/
+    lv_obj_add_event_cb(checkbox2,checkbox_cb,LV_EVENT_CLICKED,NULL);
+    lv_obj_add_event_cb(checkbox3,checkbox_cb,LV_EVENT_CLICKED,NULL);
+    lv_obj_add_event_cb(checkbox4,checkbox_cb,LV_EVENT_CLICKED,NULL);
+
+    /*一种形式的复选框*/
+    lv_obj_t *checkbox5 = lv_checkbox_create(lv_scr_act());
+    lv_obj_align(checkbox5,LV_ALIGN_BOTTOM_LEFT,20,-20);
+
+    lv_obj_set_style_radius(checkbox5,LV_RADIUS_CIRCLE,LV_STATE_DEFAULT|LV_PART_INDICATOR);
+    lv_obj_set_style_bg_img_src(checkbox5,NULL,LV_STATE_CHECKED|LV_PART_INDICATOR);
+    lv_obj_set_style_outline_width(checkbox5,2,LV_STATE_DEFAULT|LV_PART_INDICATOR);
+    lv_obj_set_style_outline_pad(checkbox5,4,LV_STATE_DEFAULT|LV_PART_INDICATOR);//轮廓至边框再带一层泡沫
+    lv_obj_set_style_outline_color(checkbox5,lv_color_hex(0x58C7A0),LV_STATE_DEFAULT|LV_PART_INDICATOR);
+    lv_obj_set_style_border_width(checkbox5,0,LV_STATE_DEFAULT|LV_PART_INDICATOR);
+
+    #endif // CHECKBOX_TEST
+
+    #if SLIDER_TEST/*测试滑块的相关内容*/
+    /*part : main  indicator   knob*/
+    /*创建滑块*/
+    lv_obj_t *slider1 = lv_slider_create(lv_scr_act());
+    lv_obj_center(slider1);
+    lv_obj_set_size(slider1,200,20);
+    //lv_obj_set_size(slider1,20,200);//设置滑块为纵的只需要，设置x < y
+
+    /*创建一个标签用于显示数值*/
+    lv_obj_t *label1 = lv_label_create(lv_scr_act());
+    lv_obj_align_to(label1,slider1,LV_ALIGN_OUT_TOP_MID,0,-10);
+    lv_label_set_text(label1,"waiting");
+
+    /*修改滑块的样式*/
+    lv_obj_set_style_bg_color(slider1,lv_color_hex(0x684AE3),LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(slider1,LV_OPA_60,LV_STATE_DEFAULT|LV_PART_MAIN);
+    lv_obj_set_style_bg_color(slider1,lv_color_hex(0xFC4A98),LV_STATE_DEFAULT|LV_PART_INDICATOR);
+    lv_obj_set_style_bg_color(slider1,lv_color_hex(0x59F73E),LV_STATE_PRESSED|LV_PART_KNOB);
+    lv_obj_set_style_pad_top(slider1,4,LV_STATE_PRESSED|LV_PART_MAIN);
+    lv_obj_set_style_pad_bottom(slider1,4,LV_STATE_PRESSED|LV_PART_MAIN);
+    lv_obj_set_style_pad_top(slider1,20,LV_STATE_PRESSED|LV_PART_KNOB);
+    lv_obj_set_style_pad_bottom(slider1,20,LV_STATE_PRESSED|LV_PART_KNOB);
+
+    /*指定滑块的范围*/
+    lv_slider_set_range(slider1,0,100);
+    lv_slider_set_range(slider1,-60,100);//也可以存在负数
+    /*设置滑块的初始值*/
+    //lv_slider_set_value(slider1,60,LV_ANIM_OFF);//先不加入动画
+    /*打印出当前值*/
+    //printf("val : %d\n",lv_slider_get_value(slider1));
+    /*添加回调函数，在回调中进行打印*/
+    lv_obj_add_event_cb(slider1,slider_cb,LV_EVENT_VALUE_CHANGED,label1);
+
+    /*设置滑块的模式*/
+    //nomal，这一个是默认状态
+    //symmetrical
+    //range
+    //lv_slider_set_mode(slider1,LV_SLIDER_MODE_NORMAL);//以最左侧为原点
+    //lv_slider_set_mode(slider1,LV_SLIDER_MODE_SYMMETRICAL);//始终以0为原点
+    lv_slider_set_mode(slider1,LV_SLIDER_MODE_RANGE);
+    /*在最后一种模式下也可以设置与读取最左侧的值*/
+    lv_slider_set_left_value(slider1,-30,LV_ANIM_OFF);
+
+    /*去除掉点击就可以定位到滑块的位置，而是改为只能通过点击*/
+    lv_obj_add_flag(slider1,LV_OBJ_FLAG_ADV_HITTEST);
+
+    /*扩展按钮区域，这样可以不用碰到按钮，就可以滑动滑块了*/
+    lv_obj_set_ext_click_area(slider1,20);
+
+
+    #endif // SLIDER_TEST
+}
+#if SLIDER_TEST
+static void slider_cb(lv_event_t *e){
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    lv_obj_t *usr_data = (lv_obj_t *)lv_event_get_user_data(e);
+    if(usr_data == NULL)
+        return;
+    if(code != LV_EVENT_VALUE_CHANGED)
+        return;
+    /*读取滑块range模式下的两侧的value*/
+    printf("%d - %d\n",lv_slider_get_left_value(target),lv_slider_get_value(target));
+    lv_label_set_text_fmt(usr_data,"%d - %d",lv_slider_get_left_value(target),lv_slider_get_value(target));
+}
+#endif // SLIDER_TEST
+
+
+#if BTN
+int temp;
+static void btn_cb(lv_event_t *e){
+    /*看一下回调函数被调用了几次*/
+    printf("temp : %d",++temp);
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if(code == LV_EVENT_VALUE_CHANGED){
+        /*验证状态是否存在*/
+        if(true == lv_obj_has_state(target,LV_STATE_CHECKED))
+           printf("checked");
+        else
+            printf("none checked");
+        printf("LV_EVENT_VALUE_CHANGED\n");
+    }else if(code == LV_EVENT_PRESSED)
+        printf("LV_EVENT_PRESSED\n");
+    else if(code == LV_EVENT_CLICKED)
+        printf("LV_EVENT_CLICKED\n");
+#endif // BTN
+
+#if PROJECT_1
+/*在给父对象添加子部件时，每一个部件都会有一个index，index默认从0开始*/
+int btn_index = 0;
+static void FanSpeedcb(lv_event_t *e){
+    lv_obj_t *target = lv_event_get_target(e);//这一个获得的是哪个按键触发的(原始对象)
+    lv_obj_t *current_target = lv_event_get_current_target(e);//这一个获得是父对象的（当前对象）
+    lv_obj_t *usr_data = (lv_obj_t *)lv_event_get_user_data(e);
+
+    /*设置状态后，颜色会被加深，清除上一个的选中状态，再打开当前的选中状态，这样就可以高亮提示了*/
+    lv_obj_t *old_target = lv_obj_get_child(current_target,btn_index);
+    if(target != current_target){
+        lv_obj_clear_state(old_target,LV_STATE_CHECKED);
+        lv_obj_add_state(target,LV_STATE_CHECKED);
+    }
+
+    if(target != current_target)
+        lv_obj_set_style_bg_color(target,lv_color_hex(0xF5E64C),LV_STATE_CHECKED|LV_PART_MAIN);
+    if(usr_data == NULL)
+        return;
+    if(target == NULL)
+        return;
+    if(current_target == NULL)
+        return;
+    if(target == current_target)
+        return;
+    btn_index = lv_obj_get_index(target);
+    printf("btn_index:%d\n",btn_index);//测试一下index
+    switch(btn_index){
+        case BTN1:
+            lv_label_set_text(usr_data,"#00ff00 SPEED_LEVEL_1#");
+            break;
+        case BTN2:
+            lv_label_set_text(usr_data,"#00ffff SPEED_LEVEL_2#");
+            break;
+        case BTN3:
+            lv_label_set_text(usr_data,"#ff00ff SPEED_LEVEL_3#");
+            break;
+        default:
+            break;
+    }
+}
+#endif // PROJECT_1
+
+#if SWITCH_TEST/*开关事件的回调函数*/
+static void sw_cb(lv_event_t *e){
+    lv_obj_t *target = lv_event_get_target(e);
+    if(target == NULL)
+        return;
+    lv_event_code_t code = lv_event_get_code(e);
+    if(code == LV_EVENT_VALUE_CHANGED){
+        if(true == lv_obj_has_state(target,LV_STATE_CHECKED)){
+            printf("open\n");
+        }else
+            printf("close\n");
+    }
+}
+#endif // SWITCH_TEST
+
+#if CHECKBOX_TEST
+static void checkbox_cb(lv_event_t *e){
+    printf("test\n");
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if(code != LV_EVENT_CLICKED)
+        return;
+     /*一但选中复选框后，就不再调用这个回调函数*/
+    lv_obj_clear_flag(old_checkbox,LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_clear_flag(target,LV_OBJ_FLAG_CLICKABLE);
+    if(target != old_checkbox)
+        lv_obj_add_flag(old_checkbox,LV_OBJ_FLAG_CLICKABLE);
+     /*只有一个复选框可以被选中*/
+    lv_obj_clear_state(old_checkbox,LV_STATE_CHECKED);
+    lv_obj_add_state(target,LV_STATE_CHECKED);
+
+    old_checkbox = target;
+}
+
+#endif // CHECKBOX_TEST
