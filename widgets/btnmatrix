@@ -1,0 +1,51 @@
+    #if BTNM_TEST/*按键矩阵的相关测试*/
+    /*part : main   items*/
+    /*按键矩阵十分轻量*/
+    /*设置按键的文本与数量时必须设置一个全局的、静态的、或都动态分配的变量*/
+    //static const char *map[] = {"1","2","3",NULL};//最后一个参数必须是NULL
+    static const char *map[] = {"#ff0000 1#","#00ff00 2#","\n","#0000ff 3#",NULL};//如何想换行可以加上"\n"
+
+    /*创建一个按键矩阵并居中*/
+    lv_obj_t *btnm1 = lv_btnmatrix_create(lv_scr_act());
+    lv_obj_center(btnm1);
+    lv_obj_set_size(btnm1,180,120);
+
+    /*设置按键的文本和数量*/
+    lv_btnmatrix_set_map(btnm1,map);
+
+    /*设置相对宽度*/
+    //lv_btnmatrix_set_btn_width(btnm1,1,1);
+    lv_btnmatrix_set_btn_width(btnm1,0,1);//设置相对宽度,第一个参数是id，第二个参数是相对的宽度
+    lv_btnmatrix_set_btn_width(btnm1,1,2);
+    lv_btnmatrix_set_btn_width(btnm1,2,2);
+
+    /*设置矩阵按键的回调函数*/
+    lv_obj_add_event_cb(btnm1,btnm_cb,LV_EVENT_VALUE_CHANGED,NULL);
+
+    /*设置清除按钮属性*/
+    /*同理，将set改为clear可以清除对应的属性*/
+    //lv_btnmatrix_set_btn_ctrl(btnm1,0,LV_BTNMATRIX_CTRL_HIDDEN);//不再显示这个按钮，看不见也，按下也没有反应
+    //lv_btnmatrix_set_btn_ctrl(btnm1,0,LV_BTNMATRIX_CTRL_NO_REPEAT);//按下只会触发一次，长按不会再继续触发
+    //lv_btnmatrix_set_btn_ctrl(btnm1,0,LV_BTNMATRIX_CTRL_POPOVER);//按下相应的按键时会有一个弹出的效果
+    lv_btnmatrix_set_btn_ctrl_all(btnm1,LV_BTNMATRIX_CTRL_POPOVER);//加上all，可以对所有的铵键都设置出同一个效果
+    lv_btnmatrix_set_btn_ctrl_all(btnm1,LV_BTNMATRIX_CTRL_RECOLOR);//可以重新着色，在mad中用“#xxxxxx text#”的方式为设置颜色，前面不要加上0x噢
+    lv_btnmatrix_set_btn_ctrl_all(btnm1,LV_BTNMATRIX_CTRL_CHECKABLE);
+    lv_btnmatrix_set_one_checked(btnm1,true);//这个与上面的checkable配合，可以只有一个颜色选中
+    #endif // BTNM_TEST_1
+}
+
+#if BTNM_TEST
+static void btnm_cb(lv_event_t *e){
+    int id;
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if(target == NULL)
+        return;
+    if(code != LV_EVENT_VALUE_CHANGED)
+        return;
+    /*添加的第一个按钮的id = 0，第二个=1*/
+    id = lv_btnmatrix_get_selected_btn(target);
+    printf("index=%d,text:%s\n",id,lv_btnmatrix_get_btn_text(target,id));
+}
+
+#endif // BTNM_TEST_1
