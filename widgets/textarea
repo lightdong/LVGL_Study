@@ -1,0 +1,115 @@
+#define TEXTAREA_TEST_1 1
+
+static void textarea1_cb(lv_event_t *e);
+static void btn1_cb(lv_event_t *e);
+
+#if TEXTAREA_TEST_1/*文本区域是个好东西*/
+    /*part : main   scrollbar   selected    cursor  textarea_placeholder*/
+    /*主体    滚动条    所选文本    光标    占位符文本*/
+
+    /*创建一个文本区域*/
+    lv_obj_t *textarea1 = lv_textarea_create(lv_scr_act());
+    lv_obj_center(textarea1);
+    lv_obj_set_size(textarea1,180,120);
+    //lv_obj_clear_state(textarea1,LV_STATE_FOCUSED);
+
+    /*设置占位符，但是如何再设置文本的话，就会被吞掉*/
+    lv_textarea_set_placeholder_text(textarea1,"password");
+
+    /*添加与获取内容*/
+    //lv_textarea_set_text(textarea1,"/******/\nHello,world!\nLiu yaodong\n/******/");
+    //lv_textarea_add_char(textarea1,'L');
+    //lv_textarea_add_text(textarea1,"iu");
+    //lv_textarea_set_text(textarea1,"yaodong");//再调用一次的话会覆盖之前写得
+    //lv_textarea_set_text(textarea1,"aaabbbcccdddeeefffggghhhiii");//太长的话会自动换行
+    //lv_textarea_set_text(textarea1,"aaa\nbbb\nccc");//也可以添加换行符换行
+    printf("text : %s\n",lv_textarea_get_text(textarea1));
+    //lv_obj_add_state(textarea1,LV_STATE_FOCUSED);//添加文本之后，看一下光标在哪？
+
+    /*设置光标位置*/
+    lv_textarea_set_cursor_click_pos(textarea1,true);//一般点击使光标移到光标的位置的功能都开启的
+    lv_textarea_set_cursor_pos(textarea1,1);//第一个字符的开头默认位置是0
+    //lv_textarea_cursor_right(textarea1);//光标向右移动
+    //lv_textarea_cursor_left(textarea1);//光标向左移动
+    lv_textarea_cursor_down(textarea1);//光标向下移动
+    lv_textarea_cursor_down(textarea1);//光标向下移动
+    lv_textarea_cursor_up(textarea1);//光标向上移动
+    lv_obj_add_state(textarea1,LV_STATE_FOCUSED);//添加文本之后，看一下光标在哪？
+
+    /*删除字符*/
+    /*不管是增加字符，还是删除字符都是以光标为基准的*/
+    /*如果要删除的是空白的话，也就是删无可删，那么不会有任何反应*/
+    lv_textarea_del_char(textarea1);//默认删除光标左侧的字符
+    lv_textarea_del_char_forward(textarea1);//这个可以删除光标右侧字符
+
+    /*单行显示模式*/
+    //lv_textarea_set_text(textarea1,"Hello world!!!  My name is Liu yaodong");
+    lv_textarea_set_one_line(textarea1,true);//单行显示下如果超出了文本区域会出现滚动条
+
+    /*设置密码模式*/
+    //lv_textarea_set_password_mode(textarea1,true);//设置密码模式放在后面可以直接显示覆盖后的文本
+    //lv_textarea_set_text(textarea1,"This is a text!!!");//设置密码模式放在前面会等一会再覆盖
+    //lv_textarea_set_password_bullet(textarea1,"#");//设置覆盖的字符
+
+    /*设置可以接受的字符，如果不再这个范围内，从光标处输入*/
+    //lv_textarea_set_accepted_chars(textarea1,"Liu yaodong");
+    //lv_textarea_set_text(textarea1,"This is a text!!!");
+
+    /*设置最大的文本长度，最多只能写入多少个，超过了就不能再写入了*/
+    //lv_textarea_set_max_length(textarea1,4);
+    //lv_textarea_set_text(textarea1,"This is a text!!!aaaaaaaaaaaaaaaaaaaaaaaaa");
+
+    /*开启可选择文本，并设置选择文本的格式*/
+    lv_textarea_set_text_selection(textarea1,true);
+    lv_obj_set_style_text_color(lv_textarea_get_label(textarea1),lv_color_hex(0xff00ff),LV_STATE_DEFAULT|LV_PART_SELECTED);//设置文本时需要专用的API
+    lv_obj_set_style_bg_color(lv_textarea_get_label(textarea1),lv_color_hex(0xC2DEE0),LV_STATE_DEFAULT|LV_PART_SELECTED);//设置专用文本背景，这样可以更加明显
+
+    /*设置文本区域的样式*/
+    lv_obj_set_style_bg_color(textarea1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT|LV_PART_SCROLLBAR);//设置滚动条
+    lv_obj_set_style_bg_color(textarea1,lv_color_hex(0xFA9CE0),LV_STATE_DEFAULT|LV_PART_CURSOR);//设置光标
+    lv_obj_set_style_bg_opa(textarea1,LV_OPA_50,LV_STATE_DEFAULT|LV_PART_CURSOR);
+    lv_obj_set_style_bg_color(textarea1,lv_color_hex(0x0000ff),LV_STATE_DEFAULT|LV_PART_TEXTAREA_PLACEHOLDER);//设置占位符
+
+    /*设置文本区域的回调函数*/
+    lv_obj_add_event_cb(textarea1,textarea1_cb,LV_EVENT_ALL,NULL);
+
+    /*创建一个按钮并设置一个回调函数，这个回调函数可以向文本区域中插入字符*/
+    /*其实键盘就是这个道理*/
+    /*当然也可以根据自己的需要来设置自己的触摸键盘*/
+    lv_obj_t *btn1 = lv_btn_create(lv_scr_act());
+    lv_obj_add_event_cb(btn1,btn1_cb,LV_EVENT_CLICKED,textarea1);
+
+    #endif // TEXTAREA_TEST_1
+}
+
+
+
+#if TEXTAREA_TEST_1
+static void textarea1_cb(lv_event_t *e){
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if(target == NULL)
+        return;
+    if(code == LV_EVENT_INSERT){
+        printf("LV_EVENT_INSERT\n");
+        lv_textarea_set_insert_replace(target,"La");//可以将文本代替，但是会再次触发一次回调函数
+    }else if(code == LV_EVENT_VALUE_CHANGED){
+        printf("LV_EVENT_VALUE_CHANGED : %s\n",lv_textarea_get_text(target));
+    }
+}
+
+static void btn1_cb(lv_event_t *e){
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if(target == NULL)
+        return;
+    lv_obj_t *usr_data = (lv_obj_t *)lv_event_get_user_data(e);
+    if(usr_data == NULL)
+        return;
+    if(code == LV_EVENT_CLICKED){
+        lv_textarea_add_char(usr_data,'A');
+        //lv_textarea_add_text(usr_data,"A");
+    }
+}
+
+#endif // TEXTAREA_TEST_1
