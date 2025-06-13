@@ -1,3 +1,6 @@
+    #define BTNM_TEST 1
+    static void btnm_cb(lv_event_t *e);
+
     #if BTNM_TEST/*按键矩阵的相关测试*/
     /*part : main   items*/
     /*按键矩阵十分轻量*/
