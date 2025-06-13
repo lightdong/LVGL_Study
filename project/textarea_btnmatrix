@@ -1,0 +1,96 @@
+    #if PROJECT_2/*文本区域 与 矩阵按键的综合demo*/
+
+    /*创建密码的输入区域*/
+    lv_obj_t *password = lv_textarea_create(lv_scr_act());
+    lv_obj_set_size(password,150,25);
+    lv_textarea_set_one_line(password,true);//设置单行模式
+    lv_textarea_set_password_mode(password,true);//设置为密码模式
+    lv_textarea_set_password_show_time(password,100);//设置覆盖的时间为100ms，这样就可以做出平常手机中的使用效果
+    lv_textarea_set_placeholder_text(password,"Enter Password");
+    lv_obj_align(password,LV_ALIGN_CENTER,40,-50);
+
+    lv_obj_t *password_label = lv_label_create(lv_scr_act());
+    lv_obj_align_to(password_label,password,LV_ALIGN_OUT_LEFT_MID,-40,0);
+    lv_label_set_text(password_label,"password:");
+
+    /*设置矩阵键盘*/
+    static const char *map[] = {
+        "1","2","3","\n",
+        "4","5","6","\n",
+        "7","8","9","\n",
+        LV_SYMBOL_BACKSPACE,"0",LV_SYMBOL_NEW_LINE,
+        NULL};
+    lv_obj_t *PassBtnm = lv_btnmatrix_create(lv_scr_act());
+    lv_btnmatrix_set_map(PassBtnm,map);
+    lv_obj_set_size(PassBtnm,180,120);
+    lv_obj_align_to(PassBtnm,password,LV_ALIGN_OUT_BOTTOM_MID,-40,20);
+    lv_obj_set_style_pad_all(PassBtnm,6,LV_STATE_DEFAULT|LV_PART_MAIN);
+    /*去除掉items的属性，与背景融为一体*/
+    lv_obj_set_style_bg_opa(PassBtnm,LV_OPA_0,LV_STATE_DEFAULT|LV_PART_ITEMS);
+    lv_obj_set_style_border_width(PassBtnm,0,LV_STATE_DEFAULT|LV_PART_ITEMS);
+    lv_obj_set_style_shadow_width(PassBtnm,0,LV_STATE_DEFAULT|LV_PART_ITEMS);
+
+
+    /*给矩阵按钮添加回调函数，可以往文本区域中写入数据*/
+    lv_obj_add_event_cb(PassBtnm,Project2_PassBtnm_cb,LV_EVENT_VALUE_CHANGED,password);
+
+    /*给文本区域添加回调函数*/
+    lv_obj_add_event_cb(password,Project2_password_cb,LV_EVENT_ALL,PassBtnm);
+
+    /*添加一种效果，那就是当选中光标时，键盘会弹出来*/
+    /*输入时可以正常地输入*/
+    /*当点击别处时，会再聚焦到别处*/
+    /*初始化隐藏键盘*/
+    lv_obj_add_flag(PassBtnm,LV_OBJ_FLAG_HIDDEN);
+    /*关闭键盘的可点击聚焦属性*/
+    lv_obj_clear_flag(PassBtnm,LV_OBJ_FLAG_CLICK_FOCUSABLE);
+
+    #endif // PROJECT_2
+}
+
+#if PROJECT_2
+static void Project2_PassBtnm_cb(lv_event_t *e){
+    int id;
+    char *text;
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if(target == NULL)
+        return;
+    lv_obj_t *usr_data = (lv_obj_t *)lv_event_get_user_data(e);
+    if(usr_data == NULL)
+        return;
+    if(code != LV_EVENT_VALUE_CHANGED)
+        return;
+    text = lv_btnmatrix_get_btn_text(target,lv_btnmatrix_get_selected_btn(target));
+    /*strcmp是C库标准函数，如果两个文本相等的话，会返回0*/
+    if(0 == strcmp(text,LV_SYMBOL_BACKSPACE)){
+        lv_textarea_del_char(usr_data);
+    }else if(0 == strcmp(text,LV_SYMBOL_NEW_LINE)){
+        /*产生给文本区域产生一个事件，在文本区域中打印信息*/
+        lv_event_send(usr_data,LV_EVENT_READY,NULL);
+    }else{
+        lv_textarea_add_text(usr_data,text);
+    }
+}
+
+static void Project2_password_cb(lv_event_t *e){
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if(target == NULL)
+        return;
+    lv_obj_t *usr_data = (lv_obj_t *)lv_event_get_user_data(e);
+    if(usr_data == NULL)
+        return;
+    /*回车就打印信息*/
+    /*聚焦就显示矩阵键盘*/
+    /*不聚焦就关闭矩阵键盘*/
+    if(code == LV_EVENT_READY){
+        printf("password:%s\n",lv_textarea_get_text(target));
+    }else if(code  == LV_EVENT_FOCUSED){
+        lv_obj_clear_flag(usr_data,LV_OBJ_FLAG_HIDDEN);
+    }else if(code  == LV_EVENT_DEFOCUSED){
+        lv_obj_add_flag(usr_data,LV_OBJ_FLAG_HIDDEN);
+    }
+}
+
+#endif // PROJECT_2
