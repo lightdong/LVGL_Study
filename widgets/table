@@ -1,0 +1,22 @@
+    #if TABLE_TEST/*表格相关函数的测试*/
+    lv_obj_t *tabel1 = lv_table_create(lv_scr_act());
+    /*设置单元格的行数与列数*/
+    lv_table_set_row_cnt(tabel1,3);//设置行数
+    lv_table_set_col_cnt(tabel1,4);//设置列数
+    lv_obj_set_size(tabel1,240,150);
+    lv_obj_center(tabel1);
+
+    /*设置单元格的大小*/
+    int i;
+    for(i = 0; i < 4;i++){
+        lv_table_set_col_width(tabel1,i,60);
+    }
+
+    /*设置单元格的文本*/
+    lv_table_set_cell_value(tabel1,1,0,"Hello");//先行，后列
+    lv_table_set_cell_value_fmt(tabel1,2,2,"val:%d",5);//先行，后列
+
+    /*对每个单元格设置属性*/
+    lv_obj_set_style_bg_color(tabel1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT|LV_PART_ITEMS);
+    lv_obj_set_style_bg_opa(tabel1,LV_OPA_50,LV_STATE_DEFAULT|LV_PART_ITEMS);
+    #endif // TABLE_TEST
