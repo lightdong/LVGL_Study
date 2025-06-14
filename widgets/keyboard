@@ -1,0 +1,57 @@
+    #if KB_TEST/*键盘的相关测试*/
+    /*其实键盘就是一个特殊的按键矩阵，只不过是lvgl把这个键盘设计好了*/
+    /*part :    main    items*/
+    lv_obj_t *kb1 = lv_keyboard_create(lv_scr_act());
+    lv_obj_center(kb1);
+    lv_obj_set_size(kb1,240,100);
+    /*启动按键弹出功能，这样可以方便看一下有没有按中某一个键*/
+    lv_keyboard_set_popovers(kb1,true);
+
+    /*设置键盘默认的显示样式*/
+    //lv_keyboard_set_mode(kb1,LV_KEYBOARD_MODE_TEXT_LOWER);//默认就是小写模式
+    //lv_keyboard_set_mode(kb1,LV_KEYBOARD_MODE_TEXT_UPPER);//这样打开时就是大写模式
+    //lv_keyboard_set_mode(kb1,LV_KEYBOARD_MODE_NUMBER);//这样打开时就是数字模式，这个模式感觉是脱离文本键盘之外的一个键盘
+    //lv_keyboard_set_mode(kb1,LV_KEYBOARD_MODE_SPECIAL);//这样打开时就是特殊字符模式
+
+    /*创建两个文本区域，并设置好位置关系*/
+    lv_obj_t *usr_name = lv_textarea_create(lv_scr_act());
+    lv_obj_t *password = lv_textarea_create(lv_scr_act());
+    lv_obj_set_size(usr_name,180,20);
+    lv_obj_set_size(password,180,20);
+    lv_textarea_set_one_line(usr_name,true);
+    lv_textarea_set_one_line(password,true);
+    lv_textarea_set_placeholder_text(usr_name,"user name");
+    lv_textarea_set_placeholder_text(password,"password");
+    lv_obj_align(usr_name,LV_ALIGN_TOP_MID,0,5);
+    lv_obj_align_to(password,usr_name,LV_ALIGN_OUT_BOTTOM_MID,0,5);
+    lv_obj_align_to(kb1,password,LV_ALIGN_OUT_BOTTOM_MID,0,15);
+
+    /*指定文本的范围*/
+    //lv_keyboard_set_textarea(kb1,usr_name);
+    /*如果想要实现可以对每一个文本区域写入，还是要通过回调函数的方式*/
+    lv_obj_add_event_cb(usr_name,tb_textarea_cb,LV_EVENT_ALL,kb1);
+    lv_obj_add_event_cb(password,tb_textarea_cb,LV_EVENT_ALL,kb1);
+
+    /*按键的事件*/
+    /*ready   cancel*/
+
+    #endif // KB_TEST
+}
+
+
+#if KB_TEST/*kb的回调函数*/
+static void tb_textarea_cb(lv_event_t *e){
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if(target == NULL)
+        return;
+    lv_obj_t *user_data = lv_event_get_user_data(e);
+    if(user_data == NULL)
+        return;
+    if(code == LV_EVENT_FOCUSED){
+        lv_keyboard_set_textarea(user_data,target);
+    }else if(code == LV_EVENT_READY){
+        printf("text : %s\n",lv_textarea_get_text(target));
+    }
+}
+#endif // KB_TEST
