@@ -1,0 +1,22 @@
+    #define IMG_TEST
+
+    #if IMG_TEST
+    lv_obj_t *img1 = lv_img_create(lv_scr_act());
+    lv_obj_t *img2 = lv_img_create(lv_scr_act());
+    lv_obj_center(img1);
+    lv_img_set_src(img1,&heart_png);
+    lv_img_set_src(img2,&dog_png);
+    lv_obj_align_to(img2,img1,LV_ALIGN_OUT_BOTTOM_MID,0,32);
+    /*调整透明度*///BEE8DF
+    lv_obj_set_style_img_opa(img1,128,LV_STATE_DEFAULT|LV_PART_MAIN);
+    //lv_obj_set_style_img_recolor(img2,lv_color_hex(0xBEE8DF),LV_STATE_DEFAULT|LV_PART_MAIN);
+    //lv_obj_set_style_img_recolor_opa(img2,100,LV_STATE_DEFAULT|LV_PART_MAIN);
+    //lv_obj_set_style_img_opa(img2,50,LV_STATE_DEFAULT|LV_PART_MAIN);
+
+    /*设置缩放、旋转（默认位置为图片中心）位置偏移（是那种在一个循环区域的偏移）*/
+    lv_img_set_offset_x(img1,10);
+    lv_img_set_offset_y(img1,10);
+    lv_img_set_zoom(img2,512);//128 -> 50%，256 -> 100%，512 -> 200%
+    lv_img_set_angle(img2,450);//10 -> 1度，顺时针旋转
+
+    #endif // IMG_TEST
