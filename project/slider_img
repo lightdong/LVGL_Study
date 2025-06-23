@@ -1,5 +1,9 @@
     #define PROJECT_3 1
 
+
+    lv_obj_t *redslider,*greenslider,*blueslider,*zoomslider,*angleslider,*opaslider;
+    lv_obj_t *img_setting;
+
     
     #if PROJECT_3 /*项目3*/
     /*创建图片对象，并设置好位置*/
