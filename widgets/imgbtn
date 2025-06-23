@@ -1,3 +1,7 @@
+    #define IMGBTN_TEST 1
+
+    static void imgbtn1_cb(lv_event_t *e);
+
     #if IMGBTN_TEST/*图片按钮的测试*/
     /*part : main*/
     /*创建一个图片按钮，并设置按下与松开的两种状态*/
