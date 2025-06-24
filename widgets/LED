@@ -1,0 +1,15 @@
+    #define LED_TEST 1
+
+    #if LED_TEST
+    /*创建一个LED*/
+    lv_obj_t *led1 = lv_led_create(lv_scr_act());
+    lv_obj_center(led1);
+
+    /*改变LED的颜色*/
+    lv_led_set_color(led1,lv_color_hex(0xff0000));
+
+    /*改变LED的亮度*/
+    lv_led_off(led1);
+    lv_led_on(led1);
+    lv_led_toggle(led1);
+    #endif // LED_TEST
