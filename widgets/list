@@ -1,2 +1,47 @@
-#define LIST_TEST 1
-static void list_btn_cb(lv_event_t *e);
+  #define LIST_TEST 1
+  static void list_btn_cb(lv_event_t *e);
+
+    #if LIST_TEST
+    /*垂直布局的矩形，可以添加按钮和文本*/
+    /*part ： mian scrollbar*/
+    lv_obj_t *list1 = lv_list_create(lv_scr_act());
+    lv_obj_center(list1);
+    lv_obj_set_height(list1,180);
+    lv_obj_t *btn1;
+
+    /*添加文本说明*/
+    lv_obj_t *text1 = lv_list_add_text(list1,"SETTING");
+    lv_obj_set_height(text1,30);
+
+    /*设置按钮按键的同时设置回调函数*/
+    /*由于是动态分配的所以可以一个变量来操作*/
+    /*添加列表，图标与文本一起添加*/
+    btn1 = lv_list_add_btn(list1,LV_SYMBOL_WIFI,"wifi");
+    lv_obj_add_event_cb(btn1,list_btn_cb,LV_EVENT_CLICKED,list1);
+    btn1 = lv_list_add_btn(list1,LV_SYMBOL_BLUETOOTH,"bluetooth");
+    lv_obj_add_event_cb(btn1,list_btn_cb,LV_EVENT_CLICKED,list1);
+    /*也可以在下面新建一个分支*/
+    text1 = lv_list_add_text(list1,"AUDIO");
+    lv_obj_set_height(text1,30);
+    btn1 = lv_list_add_btn(list1,LV_SYMBOL_AUDIO,"audio");
+    lv_obj_add_event_cb(btn1,list_btn_cb,LV_EVENT_CLICKED,list1);
+    btn1 = lv_list_add_btn(list1,LV_SYMBOL_BATTERY_FULL,"battery");
+    lv_obj_add_event_cb(btn1,list_btn_cb,LV_EVENT_CLICKED,list1);
+
+    /*获取列表按键文本*/
+    printf("text : %s\n",lv_list_get_btn_text(list1,btn1));
+    #endif // LIST_TEST
+
+    /*设置属性*/
+    lv_obj_set_style_bg_color(list1,lv_color_hex(0x0000ff),LV_STATE_DEFAULT | LV_PART_SCROLLBAR);
+    /*可以通过返回值获得的部件的指针来修改列表按钮的属性*/
+    lv_obj_set_style_bg_color(btn1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT | LV_PART_MAIN);
+}
+
+#if LIST_TEST
+static void list_btn_cb(lv_event_t *e){
+    lv_obj_t *target = lv_event_get_target(e);
+    lv_obj_t *user_data = (lv_obj_t *)lv_event_get_user_data(e);
+    printf("text : %s\n",lv_list_get_btn_text(user_data,target));
+}
+#endif // LIST_TEST
