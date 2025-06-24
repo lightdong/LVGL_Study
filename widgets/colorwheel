@@ -1,5 +1,5 @@
     #define COLORWHEEL_TEST 1
-
+    static void colorwheel_cb(lv_event_t *e);
 
     #if COLORWHEEL_TEST
     /*part : main knob*/
