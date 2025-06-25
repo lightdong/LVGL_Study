@@ -1,0 +1,50 @@
+#define DROPDOWN_TEST 1
+static void dropdown_cb(lv_event_t *e);
+
+    #if DROPDOWN_TEST
+    /*下拉框就是那个允许用户多选一的那个东西，excel中很常见的一个东西*/
+    /*这个部件由两个部件组成*/
+    /*按键：main indicator*/
+    /*列表：main scrollbar selected*/
+
+    /*创建一个下拉框，并居中*/
+    char index;
+    lv_obj_t *dropdown1 = lv_dropdown_create(lv_scr_act());
+    lv_obj_align(dropdown1,LV_ALIGN_TOP_MID,0,0);
+
+    /*设置列表中的文本*/
+    lv_dropdown_set_options(dropdown1,"First\nSecond\nThird\n1\n2\n3");//重置文本
+    lv_dropdown_add_option(dropdown1,"New Option",3);//在某个位置“插队”，位置0、1、2……
+    lv_dropdown_set_selected(dropdown1,2);//设置默认文本，就是没有下拉前看到的那个选项
+    index = lv_dropdown_get_selected(dropdown1);//获取当前的默认选项
+    printf("index=%d",index);
+
+    /*可以给下拉框的事件添加回调函数*/
+    lv_obj_add_event_cb(dropdown1,dropdown_cb,LV_EVENT_VALUE_CHANGED,NULL);
+
+    /*可以设置方向与图标*/
+    //lv_dropdown_set_dir(dropdown1,LV_DIR_LEFT);
+    lv_dropdown_set_symbol(dropdown1,LV_SYMBOL_EYE_CLOSE);
+
+    /*样式设置*/
+    lv_obj_set_style_bg_color(dropdown1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT | LV_PART_MAIN);
+    lv_obj_set_style_text_color(dropdown1,lv_color_hex(0x0000ff),LV_STATE_DEFAULT | LV_PART_INDICATOR);//不管图标还是文字，在修改颜色时，应该选中text的特性
+    lv_obj_t *list1 = lv_dropdown_get_list(dropdown1);//如何要修改列表的一些特性，要选得到这个下拉框的列表的这一个选项
+    lv_obj_set_style_bg_color(list1,lv_color_hex(0xff0000),LV_STATE_DEFAULT | LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(list1,LV_OPA_20,LV_STATE_DEFAULT | LV_PART_MAIN);
+    lv_obj_set_style_bg_color(list1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT | LV_PART_SCROLLBAR);
+    lv_obj_set_style_bg_color(list1,lv_color_hex(0xED3CE9),LV_STATE_CHECKED | LV_PART_SELECTED);
+    #endif // DROPDOWN_TEST
+
+}
+
+
+#if DROPDOWN_TEST
+static void dropdown_cb(lv_event_t *e){
+    char buff[100];
+    lv_obj_t *target = lv_event_get_target(e);
+    lv_dropdown_get_selected_str(target,buff,sizeof(buff));
+    lv_dropdown_set_symbol(target,LV_SYMBOL_EYE_OPEN);
+    printf("index=%d,str : %s\n",lv_dropdown_get_selected(target),buff);
+}
+#endif // DROPDOWN_TEST
