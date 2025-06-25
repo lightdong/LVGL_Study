@@ -1,0 +1,24 @@
+#define TABVIEW_TEST 1
+
+    #if TABVIEW_TEST
+    /*两个部件构成:lv_obj、lv_matrixbtn*/
+    /*创建选项卡*/
+    lv_obj_t *tabview1 = lv_tabview_create(lv_scr_act(),LV_DIR_TOP,40);
+
+    /*添加标签,每一个标签下都一个空间（lv_obj)创建的时候可以去获得这个返回值*/
+    /*拿到这个部件后，可以去设置这个标签页的属性*/
+    lv_obj_t *tv1 = lv_tabview_add_tab(tabview1,"Tab1");
+    lv_obj_t *tv2 = lv_tabview_add_tab(tabview1,"Tab2");
+    /*在第一个标签页下添加一个标签*/
+    lv_obj_t *tv1label = lv_label_create(tv1);//在标签页下创建一个label
+    lv_label_set_text(tv1label,"Hello world!!!");
+    lv_tabview_rename_tab(tabview1,0,"My First");//标签页的标识从0开始，最后一个参数是要修改的名称
+    lv_tabview_set_act(tabview1,1,LV_ANIM_OFF);//设置初始标签页，在这里设置为第二页
+
+    /*获取按钮对象，并修改按钮的格式*/
+    lv_obj_t *tvbtn = lv_tabview_get_tab_btns(tabview1);
+    lv_obj_set_style_bg_color(tvbtn,lv_color_hex(0xff0000),LV_STATE_CHECKED | LV_PART_ITEMS);
+    lv_obj_set_style_bg_color(tv1,lv_color_hex(0x00ff00),LV_STATE_DEFAULT | LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(tv1,LV_OPA_20,LV_STATE_DEFAULT | LV_PART_MAIN);
+    lv_obj_set_style_border_width(tvbtn,0,LV_STATE_CHECKED | LV_PART_ITEMS);//去除边框
+    #endif // TABVIEW_TEST
