@@ -1,0 +1,48 @@
+#define TILEVIEW_TEST 1
+
+    #if TILEVIEW_TEST
+    /*平铺视图在智能手表的界面设计中非常常见*/
+    /*在手机的界面中也非常常见，就是那个可以左右上下滑动的东西*/
+    /*part : main scroller*/
+    /*创建一个平铺视图*/
+    lv_obj_t *tileview1 = lv_tileview_create(lv_scr_act());
+    lv_obj_set_size(tileview1,200,200);
+    lv_obj_center(tileview1);
+    lv_obj_set_style_border_width(tileview1,1,LV_STATE_DEFAULT | LV_PART_MAIN);
+    /*设置一些相关的属性*/
+    lv_obj_set_style_radius(tileview1,LV_RADIUS_CIRCLE,LV_STATE_DEFAULT | LV_PART_MAIN);//将界面设置为圆形
+    lv_obj_set_style_bg_opa(tileview1,LV_OPA_0,LV_STATE_DEFAULT | LV_PART_SCROLLBAR);//不再显示滚动条
+    lv_obj_set_style_bg_opa(tileview1,LV_OPA_0,LV_STATE_SCROLLED | LV_PART_SCROLLBAR);//在滚动时也不再显示滚动条
+    /*设置背景颜色*/
+    lv_obj_set_style_bg_color(tileview1,lv_color_hex(0x5AE390),LV_STATE_DEFAULT | LV_PART_MAIN);
+    lv_obj_set_style_bg_grad_dir(tileview1,LV_GRAD_DIR_HOR,LV_STATE_DEFAULT | LV_PART_MAIN);
+    lv_obj_set_style_bg_main_stop(tileview1,20,LV_STATE_DEFAULT | LV_PART_MAIN);
+    lv_obj_set_style_bg_grad_color(tileview1,lv_color_hex(0x45E5F2),LV_STATE_DEFAULT | LV_PART_MAIN);
+
+    /*添加页面*/
+    lv_obj_t *MainPage = lv_tileview_add_tile(tileview1,0,0,LV_DIR_RIGHT);//先列后行，返回值是容器，可以再给这个容器添加自己想要的部件
+    lv_obj_t *TimLable = lv_label_create(MainPage);
+    lv_label_set_text(TimLable,"2025/06/26\n08:11");
+    lv_obj_center(TimLable);
+    /*再去添加一个界面用于指示温度*/
+    /*添加一个圆弧*/
+    lv_obj_t *TemPage = lv_tileview_add_tile(tileview1,1,0,LV_DIR_LEFT | LV_DIR_BOTTOM);//方向的意思可以用哪一边有界面来理解
+    lv_obj_t *TemArc = lv_arc_create(TemPage);
+    lv_obj_center(TemArc);
+    /*改善圆弧的灵敏度*/
+    lv_obj_add_flag(TemArc,LV_OBJ_FLAG_ADV_HITTEST);
+    lv_obj_set_ext_click_area(TemArc,4);
+    lv_obj_t *TemLable = lv_label_create(TemArc);
+    lv_label_set_text(TemLable,"30");
+    lv_obj_center(TemLable);
+    /*再去添加一个界面用于指示温度*/
+    lv_obj_t *HumPage = lv_tileview_add_tile(tileview1,1,1,LV_DIR_TOP);
+    lv_obj_t *HumLable = lv_label_create(HumPage);
+    lv_label_set_text(HumLable,"50");
+    lv_obj_center(HumLable);
+
+    /*手动更换当前视图*/
+    lv_obj_set_tile_id(tileview1,1,0,LV_ANIM_OFF);
+
+
+    #endif // TILEVIEW_TEST
