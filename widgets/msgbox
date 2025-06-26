@@ -1,0 +1,50 @@
+#define MSGBOS_TEST 1
+
+static void msgbox1_cb(lv_event_t *e);
+
+    #if MSGBOS_TEST
+    /*消息盒子非常常见，比如说电脑突然弹出来的弹窗*/
+    /*组成的部件非常多，有背景、按钮、文本标题、按钮矩阵*/
+
+    /*创建一个消息盒子*/
+    /*创建消息盒子时需要的参数可能有一点多*/
+    /*第一个参数是说明是模态还是非模态，模态的意思是必须处理完这人消息盒口才可以再去做其他的事情*/
+    /*第二个参数是说明给标题加上一个说明*/
+    /*第三个参数文本的内容*/
+    /*第四个参数是有没有按钮矩阵*/
+    /*第五个参数是开启还是不开启关闭消息盒子*/
+    /*添加矩阵铵钮*/
+    static const char *btn_txts[] = {"OK","Cancel",NULL};
+    lv_obj_t *msgbox1 = lv_msgbox_create(NULL,LV_SYMBOL_WARNING"WARNNING","LV_SYMBOL_WARNING",btn_txts,true);
+    lv_obj_set_size(msgbox1,180,120);
+    /*再创建一个btn，看一下模态状态下是不是不可以点击*/
+    lv_obj_t *btn1 = lv_btn_create(lv_scr_act());
+    lv_obj_center(btn1);
+
+    /*修改消息盒子中各个部件的属性*/
+    /*先获取这个部件*/
+    //lv_obj_t *msgbox_xxx = lv_msgbox_get_title(msgbox1);
+    //lv_obj_t *msgbox_xxx = lv_msgbox_get_colse_btn(msgbox1);
+    //lv_obj_t *msgbox_xxx = lv_msgbox_get_text(msgbox1);
+    //lv_obj_t *msgbox_xxx = lv_msgbox_get_btns(msgbox1);
+    lv_obj_t *msgbox_tile = lv_msgbox_get_title(msgbox1);
+    lv_obj_set_style_text_color(msgbox_tile,lv_color_hex(0xff0000),LV_STATE_DEFAULT | LV_PART_MAIN);
+
+    /*关闭消息盒子，把整个空间都删除了*/
+//    lv_msgbox_close(msgbox1);
+
+    /*给消息盒子添加一个事件*/
+    lv_obj_add_event_cb(msgbox1,msgbox1_cb,LV_EVENT_VALUE_CHANGED,NULL);
+
+    #endif // MSGBOS_TEST
+
+}
+
+#if MSGBOS_TEST
+static void msgbox1_cb(lv_event_t *e){
+/*由于矩阵按键在msgbox中具有lv_obj_flag_event_bubble，所以点击按钮时，会将事件传递给消息盒子*/
+    lv_obj_t *msgbox_btn_target = lv_event_get_target(e);//这个获得的是实际的触发事件的部件，也就是矩阵按钮的那一个
+    lv_obj_t *msgbox_target = lv_event_get_current_target(e);//这个获得的是触发这个回调函数的那一个，当前的，也就是消息盒子
+    printf("%s\n",lv_btnmatrix_get_btn_text(msgbox_btn_target,lv_btnmatrix_get_selected_btn(msgbox_btn_target)));
+}
+#endif // MSGBOS_TEST
