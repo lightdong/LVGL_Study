@@ -112,6 +112,9 @@ https://github.com/Dozingfiretruck/lvgl_conv_tool
 /*如果想使用lvgl创建界面，但是又不知道怎么创建的话，可以多看一下lvgl的官方文档*/
 
 
+在比较文本时可以使用strcmp(#include <string.h>)，相同时返回值为0
+
+
 
 
 
