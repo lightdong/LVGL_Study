@@ -114,6 +114,11 @@ https://github.com/Dozingfiretruck/lvgl_conv_tool
 
 在比较文本时可以使用strcmp(#include <string.h>)，相同时返回值为0
 
+在使用布局的API时，必须要打开宏定义LV_USE_FLEX，这个宏定义在lv_conf.h中。可以看到这个宏定义默认是打开的
+
+![image](https://github.com/user-attachments/assets/bba2ffa0-872a-4926-a6e5-de62d54e6d45)
+
+
 
 
 
