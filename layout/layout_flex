@@ -1,0 +1,55 @@
+#define LAYOUT_FLEX_TEST 1
+
+    #if LAYOUT_FLEX_TEST
+    /*测试弹性布局，在使用弹性的API时必须要打开宏定义LV_USE_FLEX，这个宏定义在lv_conf.h中*/
+    /*这个宏定义默认是打开的*/
+    /*创建一个父对象，调整大小，并居中*/
+    lv_obj_t *father = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(father,210,210);
+    lv_obj_center(father);
+
+
+    /*子对象的排布与对齐*/
+    /*设置了子对象的排布，之后再在容器中添加部件时，就会按照自己设置的排布*/
+    /*测试之后会看到当部件占满空间时，弹性布局的条件下会自动延伸空间*/
+    //lv_obj_set_flex_flow(father,LV_FLEX_FLOW_ROW);//按行排布
+    //lv_obj_set_flex_flow(father,LV_FLEX_FLOW_COLUMN);//按列排布
+    lv_obj_set_flex_flow(father,LV_FLEX_FLOW_ROW_WRAP);//按行排布,当行超出屏幕时自动换行
+    //lv_obj_set_flex_flow(father,LV_FLEX_FLOW_COLUMN_WRAP);//按列排布，当列超出屏幕时自动换行
+    //lv_obj_set_flex_flow(father,LV_FLEX_FLOW_ROW_REVERSE);//按行排布，先添加者放在最后
+    //lv_obj_set_flex_flow(father,LV_FLEX_FLOW_COLUMN_REVERSE);//按列排布，先添加者放在最后
+    //lv_obj_set_flex_flow(father,LV_FLEX_FLOW_ROW_WRAP_REVERSE);//按行排布，又自动换行，又逆序排布
+    //lv_obj_set_flex_flow(father,LV_FLEX_FLOW_COLUMN_WRAP_REVERSE);//按列排布，又自动换行，又逆序排布
+
+    /*可以给修改布局的间隙*/
+//    lv_obj_set_style_pad_row(father,40,LV_STATE_DEFAULT | LV_PART_MAIN);
+//    lv_obj_set_style_pad_column(father,40,LV_STATE_DEFAULT | LV_PART_MAIN);
+
+    /*对齐模式下有三个参数需要考虑清楚，start、center、end都是什么含义*/
+    /*第一个：start（水平靠左） center（水平居中） end（水平靠右）*/
+    /*第二个：start（垂直靠上） center（垂直居中） end（垂直靠下）*/
+    /*第三个：start（部件顶部对齐） center（部件居中对齐） end（部件底部对齐）*/
+    /*对齐默认三个参数都是start*/
+    //lv_obj_set_flex_align(father,LV_FLEX_ALIGN_END,LV_FLEX_ALIGN_CENTER,LV_FLEX_ALIGN_END);//部件居中对齐，并把整体放在右下角
+    //另外对于第一个参数还有几个关键字
+    //lv_obj_set_flex_align(father,LV_FLEX_ALIGN_START,LV_FLEX_ALIGN_START,LV_FLEX_ALIGN_START);
+    //lv_obj_set_flex_align(father,LV_FLEX_ALIGN_SPACE_BETWEEN,LV_FLEX_ALIGN_START,LV_FLEX_ALIGN_START);//自动铺满
+//    lv_obj_set_flex_align(father,LV_FLEX_ALIGN_SPACE_EVENLY,LV_FLEX_ALIGN_START,LV_FLEX_ALIGN_START);//等间距铺满
+
+    char i;
+    lv_obj_t *btn;
+    lv_obj_t *label;
+    for(i = 0;i < 3;i++){
+        btn = lv_btn_create(father);
+        lv_obj_set_size(btn,50,30);
+        label = lv_label_create(btn);
+        lv_label_set_text_fmt(label,"BTN%d",i + 1);
+    }
+
+    /*对空间进行分配,是一行的整个空间*/
+    lv_obj_set_flex_grow(lv_obj_get_child(father,0),1);//get_chiled 中的index表示的是创建的子项
+    lv_obj_set_flex_grow(lv_obj_get_child(father,1),1);
+    lv_obj_set_flex_grow(lv_obj_get_child(father,2),2);
+    /*强制换行*/
+    lv_obj_add_flag(lv_obj_get_child(father,1),LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    #endif // LAYOUT_FLEX_TEST
