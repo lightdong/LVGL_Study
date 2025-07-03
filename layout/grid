@@ -1,1 +1,45 @@
 #define LAYOUT_GRID_TEST
+
+
+    #if LAYOUT_GRID_TEST
+    /*网络布局，就像是excel表一样*/
+    /*创建一个父对象*/
+    lv_obj_t *father = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(father,210,210);
+    lv_obj_center(father);
+    lv_obj_set_style_pad_all(father,0,LV_STATE_DEFAULT | LV_PART_MAIN);
+
+    /*如果要创建一个网格的话，就要先去定义行与列*/
+    /*定义行与列时要使用静态数组，中间传递进去对应的宽度或高度，最后一个参数默认是LV_GRID_TEMPLATE_LAST_*/
+    /*在设置所占宽度 或 高度时，也可以使用比例的方式，lv_grid_fr*/
+    static lv_coord_t column_dsc[] = {40,40,80,LV_GRID_TEMPLATE_LAST};
+    static lv_coord_t raw_dsc[] = {40,80,40,LV_GRID_TEMPLATE_LAST};
+    lv_obj_set_grid_dsc_array(father,column_dsc,raw_dsc);//给父对象，添加上表格
+    /*还可以设置整个表格区域在父对象中的对齐位置*/
+    lv_obj_set_grid_align(father,LV_GRID_ALIGN_END,LV_GRID_ALIGN_END);
+    /*也可以去设置行与列的间距*/
+    lv_obj_set_style_pad_column(father,20,LV_STATE_DEFAULT | LV_PART_MAIN);
+    lv_obj_set_style_pad_row(father,20,LV_STATE_DEFAULT | LV_PART_MAIN);
+
+    /*给表格添加部件*/
+    lv_obj_t *btn1 = lv_btn_create(father);//从创建的父对象上，去创建部件
+    /*添加创建的部件到表格中参数有一点多，第一个参数是自己创建的部件*/
+    /*紧着的三个参数分别是列的对齐方式，列的位置，在创建时占用了多少个列（有点像合并单元格的意思）*/
+    /*最后的三个参数分别是行的对齐方式，行的位置，在创建时占用了多少个行（有点像合并单元格的意思）*/
+    lv_obj_set_grid_cell(btn1,LV_GRID_ALIGN_START,0,1,LV_GRID_ALIGN_STRETCH,0,1);//第1列第1行，不合并单元格，默认在单元格的左上角
+    /*TASK：创建一个单元格，位于第2列第2行，并合并两列*/
+    /*stretch可以自己在一个方向上填满单元格*/
+    lv_obj_t *btn2= lv_btn_create(father);
+    lv_obj_set_grid_cell(btn2,LV_GRID_ALIGN_STRETCH,1,2,LV_GRID_ALIGN_STRETCH,1,1);
+
+    /*在四个角上都放上按钮，方便观察现象*/
+    lv_obj_t *btn3= lv_btn_create(father);
+    lv_obj_set_grid_cell(btn3,LV_GRID_ALIGN_STRETCH,2,1,LV_GRID_ALIGN_STRETCH,0,1);
+
+    lv_obj_t *btn4= lv_btn_create(father);
+    lv_obj_set_grid_cell(btn4,LV_GRID_ALIGN_STRETCH,0,1,LV_GRID_ALIGN_STRETCH,2,1);
+
+    lv_obj_t *btn5= lv_btn_create(father);
+    lv_obj_set_grid_cell(btn5,LV_GRID_ALIGN_STRETCH,2,1,LV_GRID_ALIGN_STRETCH,2,1);
+
+    #endif // LAYOUT_GRID_TEST
